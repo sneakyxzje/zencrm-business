@@ -29,7 +29,7 @@ public class SecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Autowired
-    private CustomUserService customUserService;
+    private CustomUserDetailsService customUserService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
