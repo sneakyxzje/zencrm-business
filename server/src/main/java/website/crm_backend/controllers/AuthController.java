@@ -81,4 +81,26 @@ public class AuthController {
         response.addHeader("Set-Cookie", jwtCookie.toString());
         return ResponseEntity.ok("Login success");
     }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> getInfo(HttpServletRequest request) {
+        String token = cookie.getJwtFromCookies(request);
+        if(token == null || !jwtTokenProvider.validateToken(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+        else {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            int userId = userDetails.getId();
+            String username = userDetails.getUsername();
+            String role = userDetails.getAuthorities().iterator().next().getAuthority();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", userId);
+            response.put("username", username);
+            response.put("role", role);
+
+            return ResponseEntity.ok(response);
+        }
+    }
 }
