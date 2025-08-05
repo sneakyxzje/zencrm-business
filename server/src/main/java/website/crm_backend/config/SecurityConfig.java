@@ -18,8 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import website.crm_backend.services.CustomUserService;
-import website.crm_backend.utils.JwtAuthenticationFilter;
+import website.crm_backend.security.JwtAuthenticationFilter;
+import website.crm_backend.services.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
