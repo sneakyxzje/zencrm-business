@@ -66,7 +66,9 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String role = authentication.getAuthorities().iterator().next().getAuthority();
-        String token = jwtTokenProvider.generateToken(request.getEmail(), role);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        int userId = userDetails.getId();
+        String token = jwtTokenProvider.generateToken(userId, role);
 
         ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
         .httpOnly(true)
