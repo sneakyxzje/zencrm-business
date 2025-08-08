@@ -10,15 +10,13 @@ type User = {
 const useCurrentUser = () => {
   const isLoggedin = useAppSelector((state) => state.auth.isLoggedin);
   const [user, setUser] = useState<User | null>(null);
-
-  console.log("useCurrentUser hooks called!");
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
-    console.log("useCurrentUser hooks called in useEffect!");
     if (!isLoggedin) {
-      setUser(null);
       return;
     }
     const fetchUser = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           "http://localhost:8080/api/auth/info",
@@ -36,14 +34,18 @@ const useCurrentUser = () => {
         const axiosErr = err as import("axios").AxiosError;
         if (axiosErr.response?.status === 401) {
           setUser(null);
+        } else if (axiosErr.response?.status === 403) {
+          setUser(null);
         } else {
           console.error("Error: ", err);
         }
+      } finally {
+        setLoading(false);
       }
     };
     fetchUser();
   }, [isLoggedin]);
-  return { user };
+  return { user, loading };
 };
 
 export default useCurrentUser;
