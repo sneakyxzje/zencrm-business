@@ -1,25 +1,28 @@
-import { useState } from "react";
-import Login from "../../api/Auth";
-
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
+import { login } from "../../redux/slices/AuthSlices";
+import useCurrentUser from "../../hooks/useCurrentUser";
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const dispatch = useAppDispatch();
+  const { isLoggingin, isLoggedin } = useAppSelector((state) => state.auth);
+  const user = useCurrentUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (email.trim() !== "" && password.trim() !== "") {
-      console.log("Login with", email, password);
-      const ok = await Login(email, password);
-      if (ok) {
-        alert("Login successful");
-      } else {
-        console.log("Login not success");
-      }
-    } else {
-      alert("Email or password fields should not be empty!");
-    }
+    dispatch(login({ email, password }));
   };
 
+  useEffect(() => {
+    if (isLoggedin && user) {
+      console.log("User already logged in");
+    }
+  }, [isLoggedin, user]);
+
+  if (isLoggedin && user) {
+    return null;
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8 space-y-6">
@@ -68,9 +71,15 @@ const LoginView = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 cursor-pointer hover:bg-blue-600 text-white font-semibold py-2.5 rounded-lg transition duration-200"
+            disabled={isLoggingin}
+            className={`w-full text-white font-semibold py-2.5 rounded-lg transition duration-200
+    ${
+      isLoggingin
+        ? "bg-blue-300 cursor-not-allowed"
+        : "bg-blue-500 hover:bg-blue-600 cursor-pointer"
+    }`}
           >
-            Sign In
+            {isLoggingin ? "Signing in..." : "Sign In"}
           </button>
         </form>
         <p className="text-sm text-center text-gray-500">
