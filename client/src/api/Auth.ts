@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const Login = async (email: string, password: string) => {
+const LoginRequest = async (email: string, password: string) => {
   try {
     const response = await axios.post(
       "http://localhost:8080/api/auth/login",
@@ -8,7 +8,7 @@ const Login = async (email: string, password: string) => {
       {
         withCredentials: true,
         headers: {
-          "Content-Typsdsde": "application/json",
+          "Content-Type": "application/json",
         },
       }
     );
@@ -20,4 +20,4 @@ const Login = async (email: string, password: string) => {
   }
 };
 
-export default Login;
+export default LoginRequest;
