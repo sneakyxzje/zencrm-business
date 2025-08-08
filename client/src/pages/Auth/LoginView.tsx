@@ -5,6 +5,7 @@ import useCurrentUser from "../../hooks/useCurrentUser";
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { isLoggingin, isLoggedin } = useAppSelector((state) => state.auth);
   const user = useCurrentUser();
