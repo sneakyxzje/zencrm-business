@@ -23,9 +23,6 @@ const LoginView = () => {
 
   if (isLoggedin) return null;
 
-  if (isLoggedin && user) {
-    return null;
-  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center px-4">
       <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-8 space-y-6">
