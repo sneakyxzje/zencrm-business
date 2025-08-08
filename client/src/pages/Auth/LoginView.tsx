@@ -16,10 +16,12 @@ const LoginView = () => {
   };
 
   useEffect(() => {
-    if (isLoggedin && user) {
+    if (isLoggedin) {
       console.log("User already logged in");
     }
-  }, [isLoggedin, user]);
+  }, [isLoggedin]);
+
+  if (isLoggedin) return null;
 
   if (isLoggedin && user) {
     return null;
