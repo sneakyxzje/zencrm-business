@@ -8,7 +8,6 @@ const LoginView = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { isLoggingin, isLoggedin } = useAppSelector((state) => state.auth);
-  const user = useCurrentUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
