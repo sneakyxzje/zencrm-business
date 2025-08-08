@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
 import { login } from "../../redux/slices/AuthSlices";
-import useCurrentUser from "../../hooks/useCurrentUser";
+
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
