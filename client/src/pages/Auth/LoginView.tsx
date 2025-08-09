@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/Hooks";
-import { login } from "../../redux/slices/AuthSlices";
+import { checkAuthStatus, login } from "../../redux/slices/AuthSlices";
 
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
@@ -11,7 +11,15 @@ const LoginView = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    try {
+      dispatch(login({ email, password }))
+        .unwrap()
+        .then(() => {
+          dispatch(checkAuthStatus());
+        });
+    } catch (err) {
+      console.log("Login err", err);
+    }
   };
 
   useEffect(() => {
@@ -66,7 +74,7 @@ const LoginView = () => {
               <label
                 htmlFor="email"
                 className="block text-sm font-medium text-[#dcdcdc] mb-2"
-              >
+              > 
                 Email Address
               </label>
               <div className="relative">
