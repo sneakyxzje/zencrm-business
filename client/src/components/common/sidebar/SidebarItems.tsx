@@ -19,7 +19,7 @@ const marketingMenu: SidebarItems[] = [
     icon: <AnnouncementIcon />,
     path: "/announcement",
   },
-  { id: 3, name: "Customers", icon: <CustomerIcon />, path: "/customer" },
+  { id: 3, name: "Customers", icon: <CustomerIcon />, path: "/customers" },
   { id: 4, name: "Campaigns", icon: <CampaignIcon />, path: "/campaigns" },
   { id: 5, name: "Order Materials", icon: <MaterialsIcon />, path: "/orders" },
 ];
