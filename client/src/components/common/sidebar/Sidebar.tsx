@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import type { SidebarItems } from "./SidebarItems";
+import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 type SidebarProps = {
   sideBarItems: SidebarItems[];
@@ -8,7 +10,8 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
-
+  const username = useAuth();
+  const navigate = useNavigate();
   const bottomItems = [
     {
       id: "settings",
@@ -113,8 +116,11 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
             {sideBarItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => setActiveItem(item.id)}
-                className={`w-full flex items-center px-3 py-3 rounded-xl text-left transition-all duration-200 group ${
+                onClick={() => {
+                  setActiveItem(item.id);
+                  navigate(item.path);
+                }}
+                className={`w-full cursor-pointer flex items-center px-3 py-3 rounded-xl text-left transition-all duration-200 group ${
                   activeItem === item.id
                     ? "bg-gradient-to-r from-[#f48024]/20 to-[#f48024]/10 text-[#f48024] border border-[#f48024]/20"
                     : "text-[#dcdcdc] hover:bg-[#2d2d2d] hover:text-[#f48024]"
@@ -130,7 +136,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
                   {item.icon}
                 </div>
                 {!isCollapsed && (
-                  <span className="ml-3 font-medium text-sm">{item.name}</span>
+                  <span className="ml-3 font-medium  text-sm">{item.name}</span>
                 )}
               </button>
             ))}
@@ -163,10 +169,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
                 </div>
                 <div className="ml-3 flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#dcdcdc] truncate">
-                    John Doe
-                  </p>
-                  <p className="text-xs text-[#90999a] truncate">
-                    john@company.com
+                    {username.user?.username}
                   </p>
                 </div>
                 <button className="p-1 rounded-md hover:bg-[#4d4d4d] text-[#90999a] hover:text-[#dcdcdc] transition-colors">
