@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import type { SidebarItems } from "./SidebarItems";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { displayRole } from "../../../utils/RoleDisplay";
 
 type SidebarProps = {
   sideBarItems: SidebarItems[];
@@ -170,6 +171,9 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
                 <div className="ml-3 flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#dcdcdc] truncate">
                     {username.user?.username}
+                  </p>
+                  <p className="text-sm font-medium text-[#dcdcdc] truncate">
+                    {displayRole(username.user?.role)}
                   </p>
                 </div>
                 <button className="p-1 rounded-md hover:bg-[#4d4d4d] text-[#90999a] hover:text-[#dcdcdc] transition-colors">
