@@ -10,22 +10,22 @@ import website.crm_backend.models.User;
 
 public class UserDetailsImpl implements UserDetails {
     private int id;
-    private String email;
+    private String fullname;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(int id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String fullname, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.email = email;
+        this.fullname = fullname;
         this.password = password;
         this.authorities = authorities;
     }
 
     public UserDetailsImpl(User user) {
         this.id = user.getId();
-        this.email = user.getEmail();
+        this.fullname = user.getFullname();
         this.password = user.getPassword();
-        this.authorities = List.of(() -> "ROLE_" + user.getRole().toUpperCase());
+        this.authorities = List.of(() -> user.getRole().name());
     }
 
     public int getId() {
@@ -34,7 +34,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return fullname;
     }
 
     @Override 
