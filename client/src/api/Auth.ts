@@ -1,17 +1,8 @@
-import axios from "axios";
+import { api } from "../lib/axios";
 
 const LoginRequest = async (email: string, password: string) => {
   try {
-    const response = await axios.post(
-      "http://localhost:8080/api/auth/login",
-      { email, password },
-      {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await api.post("/api/auth/login", { email, password });
     console.log("Login successful", response.data);
     return response.data;
   } catch (err) {
