@@ -24,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         if(user == null) {
             throw new UsernameNotFoundException("Cannot find account with email!");
         }
-        GrantedAuthority authority = () -> "ROLE_" + user.getRole().toUpperCase();
+        GrantedAuthority authority = () -> user.getRole().name();
         return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), List.of(authority));
     }
 
