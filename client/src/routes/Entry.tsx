@@ -1,18 +1,17 @@
 import AdminView from "../pages/Admin/AdminView";
 import MarketingView from "../pages/Marketing/MarketingView";
 import SaleView from "../pages/Sale/SaleView";
-import { ErrorPage } from "../pages/Error";
-import { useAppSelector, useAppDispatch } from "../redux/Hooks";
-import useCurrentUser from "../hooks/useCurrentUser";
+import { useAppDispatch } from "../redux/Hooks";
 import LoginView from "../pages/Auth/LoginView";
 import { useEffect } from "react";
 import { checkAuthStatus } from "../redux/slices/AuthSlices";
 import Spinner from "../components/common/loading/Spinner";
+import { useAuth } from "../hooks/useAuth";
+import { ErrorPage } from "../pages/Error";
 
 export const Entry = () => {
   const dispatch = useAppDispatch();
-  const { isLoggedin, isInitializing } = useAppSelector((state) => state.auth);
-  const { user, loading: userLoading } = useCurrentUser();
+  const { isLoggedin, isInitializing, user, isLoggingin } = useAuth();
 
   useEffect(() => {
     if (isInitializing) {
@@ -20,26 +19,26 @@ export const Entry = () => {
     }
   }, [dispatch, isInitializing]);
 
+  if (isInitializing || isLoggingin) {
+    return <Spinner />;
+  }
   if (!isLoggedin) {
     return <LoginView />;
   }
-
-  if (isInitializing || (isLoggedin && userLoading)) {
+  if (isLoggedin && !user) {
     return <Spinner />;
   }
-  if (isLoggedin) {
-    if (!user) {
-      return <Spinner />;
-    }
-    switch (user.role) {
-      case "ROLE_ADMIN":
-        return <AdminView />;
-      case "ROLE_MARKETING":
-        return <MarketingView />;
-      case "ROLE_SALE":
-        return <SaleView />;
-      default:
-        return <ErrorPage />;
-    }
+  if (user === null) {
+    return <Spinner />;
+  }
+  switch (user.role) {
+    case "ROLE_ADMIN":
+      return <AdminView />;
+    case "ROLE_MARKETING":
+      return <MarketingView />;
+    case "ROLE_SALE":
+      return <SaleView />;
+    default:
+      return <ErrorPage />;
   }
 };
