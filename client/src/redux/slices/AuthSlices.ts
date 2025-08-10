@@ -2,7 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LoginRequest from "../../api/Auth";
 import axios from "axios";
 
+type User = {
+  id: number;
+  role: string;
+  username: string;
+};
 type AuthState = {
+  user: User | null;
   isLoggedin: boolean;
   isLoggingin: boolean;
   isInitializing: boolean;
@@ -10,6 +16,7 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
+  user: null,
   isLoggedin: false,
   isLoggingin: false,
   isInitializing: true,
@@ -83,7 +90,8 @@ const authSlice = createSlice({
       .addCase(checkAuthStatus.pending, (state) => {
         state.isInitializing = true;
       })
-      .addCase(checkAuthStatus.fulfilled, (state) => {
+      .addCase(checkAuthStatus.fulfilled, (state, action) => {
+        state.user = action.payload;
         state.isInitializing = false;
         state.isLoggedin = true;
       })
