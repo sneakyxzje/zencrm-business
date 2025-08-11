@@ -6,6 +6,8 @@ export const displayRole = (role?: RawRole) => {
       return "Admin";
     case "ROLE_MARKETING":
       return "Marketing Executive";
+    case "ROLE_MARKETING_MANAGER":
+      return "Marketing Manager";
     case "ROLE_SALE":
       return "Sale";
     default:
