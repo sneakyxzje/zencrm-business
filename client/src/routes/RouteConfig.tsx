@@ -12,9 +12,11 @@ export const RouteConfig: {
   "/customers": {
     ROLE_ADMIN: <AdminView />,
     ROLE_MARKETING: <MarketingCustomer />,
+    ROLE_MARKETING_MANAGER: <MarketingCustomer />,
     ROLE_SALE: <SaleView />,
   },
   "/upload": {
     ROLE_MARKETING: <MarketingUpload />,
+    ROLE_MARKETING_MANAGER: <MarketingUpload />,
   },
 };
