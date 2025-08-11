@@ -1,13 +1,18 @@
 package website.crm_backend.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import website.crm_backend.DTOS.LoginDTO;
+import jakarta.transaction.Transactional;
+import website.crm_backend.DTOS.request.AuthLoginRequest;
+import website.crm_backend.DTOS.request.AuthRegisterRequest;
+import website.crm_backend.DTOS.response.AuthRegisterResponse;
+import website.crm_backend.models.Team;
 import website.crm_backend.models.User;
+import website.crm_backend.repositories.TeamRepository;
 import website.crm_backend.repositories.UserRepository;
 @Service
 public class UserService {
@@ -17,31 +22,50 @@ public class UserService {
     @Autowired 
     private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<String> registerUser(User user) {
-        if(userRepository.existsByEmail(user.getEmail())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already registered");
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Transactional
+    public AuthRegisterResponse registerUser(AuthRegisterRequest request) {
+        if(userRepository.existsByEmail(request.email())) {
+            return null;
         }
-        else {
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-            userRepository.save(user);        
-            return ResponseEntity.ok("Register successful");
+        User user = new User();
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setFullname(request.fullname());
+            if (request.role() == null) {
+        throw new IllegalArgumentException("Role is required");
+    }
+        user.setRole(request.role());
+        Team team = null;
+        if(request.teamId() != null) {
+            team = teamRepository.findById(request.teamId()).orElseThrow(() -> new IllegalArgumentException("Team not found"));
         }
+        user.setTeam(team);
+        User saved = userRepository.save(user);
+        Integer teamId = (saved.getTeam() != null) ? saved.getTeam().getId() : null;
+        return new AuthRegisterResponse(
+            saved.getFullname(),
+            saved.getEmail(),
+            saved.getRole() != null ? saved.getRole().name() : null,
+            teamId
+        );
     }
     
-    public ResponseEntity<String> login(LoginDTO loginDTO) {
-        String email = loginDTO.getEmail();
-        String password = loginDTO.getPassword();
+    public String login(AuthLoginRequest request) {
+        String email = request.email();
+        String password = request.password();
         User user = userRepository.findByEmail(email);
         if(user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Account don't exists");
+            return "Account not exists";
         }
         
         if(passwordEncoder.matches(password, user.getPassword())) {
-            return ResponseEntity.ok("Login succesfully");
+            return "Login success!";
         }
         else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong password!");
+            return "Wrong password";
         }
     }
 }
