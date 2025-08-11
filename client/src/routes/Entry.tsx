@@ -38,6 +38,8 @@ export const Entry = () => {
       return <MarketingView />;
     case "ROLE_SALE":
       return <SaleView />;
+    case "ROLE_MARKETING_MANAGER":
+      return <MarketingView />;
     default:
       return <ErrorPage />;
   }
