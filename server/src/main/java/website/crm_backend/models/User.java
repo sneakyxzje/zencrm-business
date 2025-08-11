@@ -4,15 +4,21 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.Data;
 import website.crm_backend.models.enums.*;
 
 @Entity
+@Data
 @Table(
     name = "users",
     uniqueConstraints = @UniqueConstraint(
@@ -38,44 +44,9 @@ public class User {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private Role role = Role.ROLE_MARKETING;
+    private UserRole role;
 
-    public User() {}
-
-    public int getId() {
-        return id;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="team_id", nullable = false, foreignKey = @ForeignKey(name="fk_user_team"))
+    private Team team;
 }
