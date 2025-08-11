@@ -22,13 +22,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import website.crm_backend.DTOS.LoginDTO;
-import website.crm_backend.models.User;
+import website.crm_backend.DTOS.request.AuthLoginRequest;
+import website.crm_backend.DTOS.request.AuthRegisterRequest;
+import website.crm_backend.DTOS.response.AuthRegisterResponse;
 import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.security.JwtAuthenticationFilter;
 import website.crm_backend.security.JwtTokenProvider;
 import website.crm_backend.security.UserDetailsImpl;
 import website.crm_backend.services.UserService;
+import website.crm_backend.utils.AuthUtils;
 import website.crm_backend.utils.CookieUtils;
 
 
@@ -54,14 +56,19 @@ public class AuthController {
     UserRepository userRepository;
 
     @PostMapping("/register")
-    public ResponseEntity<String> Register(@Validated @RequestBody User user) {
-        return userService.registerUser(user);
+    public ResponseEntity<AuthRegisterResponse> register(@Validated @RequestBody AuthRegisterRequest request) {
+        AuthRegisterResponse response = userService.registerUser(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> Login(@RequestBody LoginDTO request, HttpServletResponse response) {
+    public ResponseEntity<?> login(@RequestBody AuthLoginRequest request, HttpServletResponse response) {
 
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            request.email(),
+            request.password()
+            )
+        );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -72,7 +79,7 @@ public class AuthController {
 
         ResponseCookie jwtCookie = ResponseCookie.from("jwt", token)
         .httpOnly(true)
-        .secure(false) // change to true when deploy to production
+        .secure(false) 
         .path("/")
         .maxAge(24 * 60 * 60)
         .sameSite("Strict")
@@ -89,11 +96,9 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
         else {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            int userId = userDetails.getId();
-            String username = userDetails.getUsername();
-            String role = userDetails.getAuthorities().iterator().next().getAuthority();
+            int userId = AuthUtils.getUserId();
+            String username = AuthUtils.getUsername();
+            String role = AuthUtils.getRole();
 
             Map<String, Object> response = new HashMap<>();
             response.put("id", userId);
