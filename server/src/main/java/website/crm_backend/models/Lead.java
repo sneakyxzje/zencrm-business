@@ -47,6 +47,14 @@ public class Lead {
 
     @Column(length=1000) 
     private String note;
+
+    @Column(length=200, nullable = false)
+    private String customerName;
+
+    @Column(length=200)
+    private String productName;
+
+    private LocalDateTime assignedAt;
     
     @Column(updatable = false)
     private LocalDateTime createdAt;
