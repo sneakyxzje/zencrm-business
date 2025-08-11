@@ -32,6 +32,11 @@ public class LeadAssignment {
     @JoinColumn(name="assignee_user_id", foreignKey = @ForeignKey(name="fk_assignee_user_id"))
     private User assignee;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="assigned_by_user_id", foreignKey = @ForeignKey(name="fk_assigned_by_user"))
+    private User assignedBy;
+
+
     private LocalDateTime assignedAt;
     private LocalDateTime unAssignedAt;
 
