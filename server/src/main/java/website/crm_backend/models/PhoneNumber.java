@@ -25,7 +25,7 @@ public class PhoneNumber {
     private long id;
 
     @NonNull
-    @Column(nullable = false, length=12)
+    @Column(nullable = false, length=15)
     private String number;
 
 }
