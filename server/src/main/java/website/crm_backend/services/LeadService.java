@@ -1,18 +1,17 @@
 package website.crm_backend.services;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import website.crm_backend.DTOS.LeadListDTO;
+import website.crm_backend.DTOS.LeadDTO.LeadListDTO;
 import website.crm_backend.models.Lead;
 import website.crm_backend.models.LeadLog;
 import website.crm_backend.models.PhoneNumber;
@@ -23,7 +22,7 @@ import website.crm_backend.repositories.LeadLogRepository;
 import website.crm_backend.repositories.LeadRepository;
 import website.crm_backend.repositories.PhoneNumberRepository;
 import website.crm_backend.repositories.UserRepository;
-import website.crm_backend.security.UserDetailsImpl;
+import website.crm_backend.utils.AuthUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -37,9 +36,8 @@ public class LeadService {
     @Transactional
     public Lead uploadNumber(String rawNumber) {
         String normalized = normalize(rawNumber);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
-        int userId = userDetails.getId();
+        var userInfo = AuthUtils.getUserId();
+        int userId = userInfo; 
 
         var phone = phoneRepo.findByNumber(normalized)
         .orElseGet(() -> phoneRepo.save(new PhoneNumber(normalized)));
@@ -61,11 +59,17 @@ public class LeadService {
         return leadRepo.findAllByOrderByCreatedAtDesc(pageable)
         .map(l -> new LeadListDTO(
             l.getId(),
+            l.getCustomerName(),
             l.getPhone().getNumber(),
+            l.getProductName(),
+            l.getCreatedBy().getFullname(),
+            l.getCreatedBy().getTeam().getTeamName(),
             l.getAssignee() != null ? l.getAssignee().getFullname() : null,
+            l.getAssignee() != null && l.getAssignee().getTeam() != null ? l.getAssignee().getTeam().getTeamName() : null,
             l.getStatus().name(),
-            l.getCreatedBy() != null ? l.getCreatedBy().getFullname() : null,
-            l.getCreatedAt().toString()
+            l.getNote(),
+            l.getCreatedAt().toString(),
+            l.getAssignedAt() != null ? l.getAssignedAt().toString() : null
         ));
     }
 
