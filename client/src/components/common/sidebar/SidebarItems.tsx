@@ -24,6 +24,17 @@ const marketingMenu: SidebarItems[] = [
   { id: 5, name: "Order Materials", icon: <MaterialsIcon />, path: "/orders" },
 ];
 
+const saleMenu: SidebarItems[] = [
+  { id: 1, name: "Home", icon: <HomeIcon />, path: "/" },
+  {
+    id: 2,
+    name: "Announcement",
+    icon: <AnnouncementIcon />,
+    path: "/announcement",
+  },
+  { id: 3, name: "Customers", icon: <CustomerIcon />, path: "/customers" },
+];
 export const menuByRole: Record<string, SidebarItems[]> = {
   ROLE_MARKETING: marketingMenu,
+  ROLE_SALE: saleMenu,
 };
