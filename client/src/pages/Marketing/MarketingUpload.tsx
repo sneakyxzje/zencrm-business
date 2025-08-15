@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 import { menuByRole } from "../../components/common/sidebar/SidebarItems";
-import { LeadService } from "../../api/Lead";
+import { LeadService } from "../../api/LeadService";
+import { useAuth } from "../../hooks/useAuth";
 
 const MarketingUpload = () => {
   const [formData, setFormData] = useState({
@@ -15,14 +16,25 @@ const MarketingUpload = () => {
     address: "",
   });
 
+  const userInfo = useAuth();
+
   const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [product, setProduct] = useState<string>("");
+  const [customerName, setCustomerName] = useState<string>("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("clicked");
     console.log(phoneNumber);
+    console.log(product);
+    console.log(customerName);
     e.preventDefault();
     try {
-      const res = await LeadService.uploadNumber(phoneNumber);
+      const res = await LeadService.uploadNumber(
+        customerName,
+        phoneNumber,
+        product,
+        null,
+        null
+      );
       alert("Upload success");
       return res;
     } catch (err) {
@@ -31,20 +43,6 @@ const MarketingUpload = () => {
       console.log(err);
     }
   };
-  const teams = [
-    "Team A",
-    "Team B",
-    "Team C",
-    "Team Marketing",
-    "Team Enterprise",
-  ];
-  const products = [
-    "ZenCRM Basic",
-    "ZenCRM Pro",
-    "ZenCRM Enterprise",
-    "ZenSuite",
-    "Custom Solution",
-  ];
   const salesTeams = [
     "Inside Sales",
     "Field Sales",
@@ -121,13 +119,10 @@ const MarketingUpload = () => {
                         </svg>
                       </div>
                       <input
-                        type="text"
+                        disabled
                         value={formData.assignedBy}
-                        onChange={(e) =>
-                          handleInputChange("assignedBy", e.target.value)
-                        }
-                        placeholder="Nguyễn Văn A"
-                        className="w-full pl-10 pr-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] placeholder-[#90999a] focus:outline-none focus:ring-2 focus:ring-[#f48024] transition"
+                        placeholder={userInfo.user?.username}
+                        className="w-full pl-10 pr-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl placeholder-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024] transition"
                       />
                     </div>
                   </div>
@@ -159,12 +154,12 @@ const MarketingUpload = () => {
                         }
                         className="w-full pl-10 pr-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024] transition appearance-none"
                       >
-                        <option value="">Chọn team</option>
-                        {teams.map((team, index) => (
+                        <option value="">{userInfo.user?.teamName}</option>
+                        {/* {teams.map((team, index) => (
                           <option key={index} value={team}>
                             {team}
-                          </option>
-                        ))}
+                          </option> */}
+                        {/* ))} */}
                       </select>
                       <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                         <svg
@@ -185,7 +180,6 @@ const MarketingUpload = () => {
                   </div>
                 </div>
 
-                {/* Row 2: Tên khách hàng & Số điện thoại */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
@@ -209,11 +203,8 @@ const MarketingUpload = () => {
                       </div>
                       <input
                         type="text"
-                        value={formData.customerName}
-                        onChange={(e) =>
-                          handleInputChange("customerName", e.target.value)
-                        }
-                        placeholder="Công ty ABC"
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
                         className="w-full pl-10 pr-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] placeholder-[#90999a] focus:outline-none focus:ring-2 focus:ring-[#f48024] transition"
                       />
                     </div>
@@ -271,20 +262,13 @@ const MarketingUpload = () => {
                         />
                       </svg>
                     </div>
-                    <select
-                      value={formData.product}
-                      onChange={(e) =>
-                        handleInputChange("product", e.target.value)
-                      }
+                    <input
+                      type="text"
+                      value={product}
+                      placeholder="Tên sản phẩm"
+                      onChange={(e) => setProduct(e.target.value)}
                       className="w-full pl-10 pr-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024] transition appearance-none"
-                    >
-                      <option value="">Chọn sản phẩm</option>
-                      {products.map((product, index) => (
-                        <option key={index} value={product}>
-                          {product}
-                        </option>
-                      ))}
-                    </select>
+                    ></input>
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                       <svg
                         className="h-5 w-5 text-[#90999a]"
@@ -303,7 +287,6 @@ const MarketingUpload = () => {
                   </div>
                 </div>
 
-                {/* Row 4: Sale & Team sale */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
