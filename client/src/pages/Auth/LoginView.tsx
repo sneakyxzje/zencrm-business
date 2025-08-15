@@ -34,7 +34,6 @@ const LoginView = () => {
   return (
     <div className="min-h-screen bg-[#232629] ">
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 md:py-16">
-        Header / Brand
         <motion.div
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
