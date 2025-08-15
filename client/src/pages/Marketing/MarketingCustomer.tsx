@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Sidebar from "../../components/common/sidebar/Sidebar";
 import { menuByRole } from "../../components/common/sidebar/SidebarItems";
-import { LeadService } from "../../api/Lead";
+import { LeadService } from "../../api/LeadService";
 import type { Lead } from "../../types/lead";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +83,7 @@ const MarketingCustomer = () => {
 
   const stats = useMemo(() => {
     const total = leads.length;
-    const unassigned = leads.filter((l) => !l.assignee?.fullname).length;
+    const unassigned = leads.filter((l) => !l.assigneeName).length;
     const converted = leads.filter(
       (l) => l.status === ("converted" as Lead["status"])
     ).length;
@@ -217,7 +217,8 @@ const MarketingCustomer = () => {
                   <tr>
                     {[
                       "Số điện thoại",
-                      "Ngày thêm",
+                      "Tên khách hàng",
+                      "Ngày Tạo",
                       "Sales phụ trách",
                       "Ngày nhận",
                       "Trạng thái",
@@ -277,12 +278,7 @@ const MarketingCustomer = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="text-sm text-[#dcdcdc]">
-                              {dayjs(l.createdAt).format("DD/MM/YYYY HH:mm:ss")}
-                            </div>
-                          </td>
-                          <td className="px-6 py-4">
-                            <div className="text-sm text-[#dcdcdc]">
-                              {l.assignee?.fullname || (
+                              {l.customerName || (
                                 <span className="text-[#90999a] italic">
                                   Chưa phân bổ
                                 </span>
@@ -291,7 +287,27 @@ const MarketingCustomer = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="text-sm text-[#dcdcdc]">
-                              <span className="text-[#90999a]">Null</span>
+                              {dayjs(l.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-[#dcdcdc]">
+                              {l.assigneeName || (
+                                <span className="text-[#90999a] italic">
+                                  Chưa phân bổ
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="text-sm text-[#dcdcdc]">
+                              <span className="text-[#90999a]">
+                                {l.assignedAt || (
+                                  <span className="text-[#90999a] italic">
+                                    Chưa phân bổ
+                                  </span>
+                                )}
+                              </span>
                             </div>
                           </td>
                           <td className="px-6 py-4">
@@ -384,7 +400,7 @@ const MarketingCustomer = () => {
                 />
                 <InfoItem
                   label="Sales phụ trách"
-                  value={selectedLead.assignee?.fullname ?? "Chưa phân bổ"}
+                  value={selectedLead.assigneeName ?? "Chưa phân bổ"}
                 />
                 <InfoItem label="Ngày nhận" value="Null" muted />
                 <div>
@@ -423,7 +439,6 @@ const MarketingCustomer = () => {
         )}
       </AnimatePresence>
 
-      {/* Add Phone Modal (giữ nguyên logic, nâng UI) */}
       <AnimatePresence>
         {showAddModal && (
           <motion.div
