@@ -171,7 +171,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
                 setActiveItem(item.id);
                 navigate(item.path);
               }}
-              className={`w-full flex items-center ${
+              className={`w-full flex cursor-pointer items-center ${
                 isCollapsed ? "justify-center px-0" : "justify-start px-3"
               } py-2.5 rounded-xl text-left transition-colors group border ${
                 activeItem === item.id
