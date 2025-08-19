@@ -1,17 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import LoginRequest from "../../api/Auth";
 import axios from "axios";
+import { api } from "../../lib/axios";
 
 type User = {
   id: number;
   role: string;
   username: string;
+  teamName: string;
 };
 type AuthState = {
   user: User | null;
   isLoggedin: boolean;
   isLoggingin: boolean;
   isInitializing: boolean;
+  logout: boolean;
   error: string | null;
 };
 
@@ -20,6 +23,7 @@ const initialState: AuthState = {
   isLoggedin: false,
   isLoggingin: false,
   isInitializing: true,
+  logout: false,
   error: null,
 };
 
@@ -53,6 +57,19 @@ export const login = createAsyncThunk(
     try {
       const res = await LoginRequest(email, password);
       return res;
+    } catch (err) {
+      const error = err as Error;
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logout",
+  async (_, thunkAPI) => {
+    try {
+      await api.post("/api/auth/logout");
+      return;
     } catch (err) {
       const error = err as Error;
       return thunkAPI.rejectWithValue(error.message);
@@ -98,6 +115,11 @@ const authSlice = createSlice({
       .addCase(checkAuthStatus.rejected, (state) => {
         state.isInitializing = false;
         state.isLoggedin = false;
+      })
+      //Logout case
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.isLoggedin = false;
+        state.user = null;
       });
   },
 });
