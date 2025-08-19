@@ -4,13 +4,15 @@ import java.util.Collection;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import website.crm_backend.models.Lead;
 import website.crm_backend.models.enums.LeadStatus;
 
-public interface LeadRepository extends JpaRepository<Lead, Integer>{
+public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecificationExecutor<Lead>{
     Page<Lead> findByAssigneeIsNullAndStatus(LeadStatus status, Pageable pageable);
     Page<Lead> findByAssignee_IdAndStatusIn(int assigneeUserId, Collection<LeadStatus> statutes, Pageable pageable);
     Page<Lead> findByCreatedBy_IdOrderByCreatedAtDesc(int createdByUserId, Pageable pageable);
@@ -19,4 +21,9 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>{
 
     @EntityGraph(attributePaths = {"phone", "assignee"})
     Page<Lead> findAllByOrderByCreatedAtDesc(Pageable pageable);
+
+    @Override
+    @EntityGraph(attributePaths = {"phone", "createdBy", "assignee"})
+    Page<Lead> findAll(Specification<Lead> spec, Pageable pageable);
+
 }
