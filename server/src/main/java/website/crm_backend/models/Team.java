@@ -26,8 +26,8 @@ public class Team {
     @Column(nullable = false, length = 100, unique = true)
     private String teamName;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="fk_manager_id", foreignKey = @ForeignKey(name = "fk_manager_team_id"))
+    @OneToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name="fk_manager_id", nullable = true, foreignKey = @ForeignKey(name = "fk_manager_team_id"))
     private User manager;
 
     @Enumerated(EnumType.STRING)
