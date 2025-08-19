@@ -96,7 +96,6 @@ const MarketingUpload = () => {
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Row 1: Người lên số & Team */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
@@ -241,7 +240,6 @@ const MarketingUpload = () => {
                   </div>
                 </div>
 
-                {/* Row 3: Sản phẩm */}
                 <div>
                   <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                     Sản phẩm
@@ -373,7 +371,6 @@ const MarketingUpload = () => {
                   </div>
                 </div>
 
-                {/* Row 5: Địa chỉ */}
                 <div>
                   <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                     Địa chỉ
