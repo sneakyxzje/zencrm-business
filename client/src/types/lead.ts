@@ -1,16 +1,18 @@
-export type LeadStatus = "NEW" | "IN_PROGRESS" | "DONE";
-
-export type UserLite = {
-  id: number;
-  fullname: string;
-};
+export type LeadStatus = "NEW" | "ASSIGNED" | "CLOSED";
 
 export type Lead = {
   id: number;
+  customerName: string;
   phoneNumber: string;
-  assignee: UserLite | null;
-  createdBy?: UserLite | null;
+  product: string;
+  createdByName: string;
+  createdByTeam: string | null;
+  assigneeName: string | null;
+  assigneeTeam: string | null;
   status: LeadStatus;
-  createdAt: string;
+  address: string;
   note: string | null;
+  createdAt: string;
+  assignedAt: string | null;
+  assignedBy: string | null;
 };
