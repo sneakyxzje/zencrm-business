@@ -2,10 +2,29 @@ package website.crm_backend.DTOS.response;
 
 import java.time.LocalDateTime;
 
-public record UploadLeadResponse(    int id,
-    String phoneNumber,
-    int createdById,
+import website.crm_backend.models.enums.LeadStatus;
+
+public record UploadLeadResponse( 
+
+    Integer id,
+    
+    Integer createdById,
     String createdByName,
-    String status,
-    LocalDateTime createdAt) {
+
+    String customerName,
+    String phoneNumber,
+
+    String productName,
+
+    Integer assigneeId,
+    String assignee,
+
+    LeadStatus status,
+
+    LocalDateTime createdAt,
+    LocalDateTime assignedAt,
+
+    Integer assignedById,
+    String assignedByName 
+    ) {
 };
