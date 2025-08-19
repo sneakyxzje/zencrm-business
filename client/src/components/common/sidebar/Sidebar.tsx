@@ -4,6 +4,8 @@ import type { SidebarItems } from "./SidebarItems";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { displayRole } from "../../../utils/RoleDisplay";
+import { useAppDispatch } from "../../../redux/Hooks";
+import { logoutUser } from "../../../redux/slices/AuthSlices";
 
 type SidebarProps = {
   sideBarItems: SidebarItems[];
@@ -12,9 +14,10 @@ type SidebarProps = {
 const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [activeItem, setActiveItem] = useState<number | null>(null);
-  const username = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const dispatch = useAppDispatch();
 
   const bottomItems = useMemo(
     () => [
@@ -44,8 +47,8 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
         ),
       },
       {
-        id: "help",
-        label: "Help & Support",
+        id: "Logout",
+        label: "Logout",
         icon: (
           <svg
             className="w-5 h-5"
@@ -57,13 +60,27 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
             />
           </svg>
         ),
+        onClick: async () => {
+          try {
+            await dispatch(logoutUser());
+            navigate("/");
+          } catch (err) {
+            console.error(err);
+          }
+        },
       },
     ],
-    []
+    [dispatch, navigate]
   );
 
   useEffect(() => {
@@ -222,9 +239,10 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
           {bottomItems.map((item) => (
             <button
               key={item.id}
+              onClick={item.onClick}
               className={`w-full flex items-center ${
                 isCollapsed ? "justify-center px-0" : "justify-start px-3"
-              } py-2.5 rounded-xl text-left text-[#dcdcdc] hover:bg-[#27292b] hover:text-[#f48024] transition-colors group`}
+              } py-2.5  cursor-pointer rounded-xl text-left text-[#dcdcdc] hover:bg-[#27292b] hover:text-[#f48024] transition-colors group`}
             >
               <span className="text-[#90999a] group-hover:text-[#f48024] transition-colors">
                 {item.icon}
@@ -258,10 +276,10 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
                 </div>
                 <div className="ml-3 flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#dcdcdc] truncate">
-                    {username.user?.username}
+                    {auth.user?.username}
                   </p>
                   <p className="text-[11px] text-[#a7b0b1] truncate">
-                    {displayRole(username.user?.role)}
+                    {displayRole(auth.user?.role)}
                   </p>
                 </div>
                 <svg
