@@ -20,7 +20,7 @@ const RouteRender = () => {
 
   if (isLoggingin || isInitializing) return <Spinner />;
   if (!user) {
-    return <h1>You are not signin</h1>;
+    return <ErrorPage />;
   }
 
   const componentMap = RouteConfig[pathname];
