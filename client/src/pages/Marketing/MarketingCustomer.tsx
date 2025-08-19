@@ -6,6 +6,7 @@ import { LeadService } from "../../api/LeadService";
 import type { Lead } from "../../types/lead";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
+import { time } from "../../utils/time";
 
 type CampaignStatus = "active" | "paused" | "completed" | string;
 
@@ -302,9 +303,9 @@ const MarketingCustomer = () => {
                           <td className="px-6 py-4">
                             <div className="text-sm text-[#dcdcdc]">
                               <span className="text-[#90999a]">
-                                {l.assignedAt || (
+                                {time(l.assignedAt) || (
                                   <span className="text-[#90999a] italic">
-                                    Chưa phân bổ
+                                    Chưa có
                                   </span>
                                 )}
                               </span>
@@ -394,15 +395,17 @@ const MarketingCustomer = () => {
               <div className="grid grid-cols-2 gap-4">
                 <InfoItem
                   label="Ngày thêm"
-                  value={dayjs(selectedLead.createdAt).format(
-                    "DD/MM/YYYY HH:mm:ss"
-                  )}
+                  value={time(selectedLead.createdAt) ?? "Chưa phân bổ"}
                 />
                 <InfoItem
                   label="Sales phụ trách"
                   value={selectedLead.assigneeName ?? "Chưa phân bổ"}
                 />
-                <InfoItem label="Ngày nhận" value="Null" muted />
+                <InfoItem
+                  label="Ngày nhận"
+                  value={time(selectedLead.assignedAt) ?? "Chưa có"}
+                  muted
+                />
                 <div>
                   <div className="text-[11px] text-[#90999a] mb-1">
                     Trạng thái
