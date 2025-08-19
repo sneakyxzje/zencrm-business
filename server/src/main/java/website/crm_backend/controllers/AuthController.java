@@ -29,7 +29,7 @@ import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.security.JwtAuthenticationFilter;
 import website.crm_backend.security.JwtTokenProvider;
 import website.crm_backend.security.UserDetailsImpl;
-import website.crm_backend.services.UserService;
+import website.crm_backend.services.AuthService;
 import website.crm_backend.utils.AuthUtils;
 import website.crm_backend.utils.CookieUtils;
 
@@ -38,7 +38,7 @@ import website.crm_backend.utils.CookieUtils;
 @RequestMapping("/api/auth")
 public class AuthController {
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
     @Autowired
     AuthenticationManager authenticationManager;
@@ -57,7 +57,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthRegisterResponse> register(@Validated @RequestBody AuthRegisterRequest request) {
-        AuthRegisterResponse response = userService.registerUser(request);
+        AuthRegisterResponse response = authService.registerUser(request);
         return ResponseEntity.ok(response);
     }
 
@@ -91,21 +91,12 @@ public class AuthController {
 
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(HttpServletRequest request) {
-        String token = cookie.getJwtFromCookies(request);
-        if(token == null || !jwtTokenProvider.validateToken(token)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-        else {
-            int userId = AuthUtils.getUserId();
-            String username = AuthUtils.getUsername();
-            String role = AuthUtils.getRole();
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("id", userId);
-            response.put("username", username);
-            response.put("role", role);
-
-            return ResponseEntity.ok(response);
-        }
+        var res = Map.of(
+            "id", AuthUtils.getUserId(),
+            "username", AuthUtils.getFullName(),
+            "role", AuthUtils.getRole(),
+            "teamName", AuthUtils.getTeamName()
+        );
+        return ResponseEntity.ok(res);
     }
 }
