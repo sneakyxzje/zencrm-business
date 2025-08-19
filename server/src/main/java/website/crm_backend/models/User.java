@@ -46,7 +46,7 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name="team_id", nullable = false, foreignKey = @ForeignKey(name="fk_user_team"))
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name="team_id", foreignKey = @ForeignKey(name="fk_user_team"))
     private Team team;
 }
