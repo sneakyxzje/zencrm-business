@@ -16,11 +16,19 @@ public class AuthUtils {
         return getUserDetails().getId();
     }
 
-    public static String getUsername() {
+    public static String getUsername() { // email
         return getUserDetails().getUsername();
+    }
+
+    public static String getFullName() {
+        return getUserDetails().getFullname();
     }
 
     public static String getRole() {
         return getUserDetails().getAuthorities().iterator().next().getAuthority();
+    }
+
+    public static String getTeamName() {
+        return getUserDetails().getTeamName();
     }
 }
