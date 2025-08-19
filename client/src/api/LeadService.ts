@@ -1,16 +1,16 @@
 import { api } from "../lib/axios";
 import type { assignableSales } from "../types/assignableSales";
+import type { assignLead } from "../types/assignLead";
 import type { Lead, LeadStatus } from "../types/lead";
 import type { Page } from "../types/page";
 
 export const LeadService = {
-  // List for marketing
+  // MARKETING ZONE
   list: async (params: { page?: number; size?: number }) => {
     const { page = 0, size = 15 } = params ?? {};
-    const res = await api.get<Page<Lead>>("/api/leads/list", {
+    const res = await api.get<Page<Lead>>("/api/leads/marketing/list", {
       params: { page, size },
     });
-    console.log(res.data);
     return res.data;
   },
 
@@ -31,6 +31,16 @@ export const LeadService = {
     return res.data;
   },
 
+  // SALE ZONE
+  listLeadAssign: async (params: { page?: number; size?: number }) => {
+    const { page = 0, size = 15 } = params ?? {};
+    const res = await api.get<Page<Lead>>("/api/leads/sale/list", {
+      params: { page, size },
+    });
+    return res.data;
+  },
+
+  // SALE MANAGER ZONE
   queue: async (params: {
     page?: number;
     size?: number;
@@ -62,7 +72,15 @@ export const LeadService = {
         params: { page, size, q, teamId },
       }
     );
-    console.log(res.data);
+    return res.data;
+  },
+
+  assignLead: async (params: { leadId: number; saleId: number }) => {
+    const { leadId, saleId } = params ?? {};
+    const res = await api.post<assignLead>("/api/leads/assign-lead", {
+      leadId,
+      saleId,
+    });
     return res.data;
   },
 };
