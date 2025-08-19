@@ -1,13 +1,12 @@
 package website.crm_backend.services;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import website.crm_backend.models.User;
 import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.security.UserDetailsImpl;
@@ -19,18 +18,19 @@ public class CustomUserDetailsService implements UserDetailsService{
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException  {
         User user = userRepository.findByEmail(email);
         if(user == null) {
             throw new UsernameNotFoundException("Cannot find account with email!");
         }
-        GrantedAuthority authority = () -> user.getRole().name();
-        return new UserDetailsImpl(user.getId(), user.getEmail(), user.getPassword(), List.of(authority));
+        return UserDetailsImpl.from(user);
     }
 
+    @Transactional
     public UserDetails loadUserById(int id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
-        return new UserDetailsImpl(user);
+        return UserDetailsImpl.from(user);
     }
 
 }
