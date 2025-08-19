@@ -1,9 +1,11 @@
 package website.crm_backend.DTOS.request;
 
-import lombok.Data;
 
-@Data
-public class UploadLeadRequest {
-    
-    private String phoneNumber;
-}
+public record UploadLeadRequest(
+    String customerName,
+    String phoneNumber,
+    String productName,
+    Integer assignee,
+    String address
+) {}
+
