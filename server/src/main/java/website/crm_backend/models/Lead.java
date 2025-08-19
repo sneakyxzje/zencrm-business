@@ -54,6 +54,13 @@ public class Lead {
     @Column(length=200)
     private String productName;
 
+    @Column(length=1000)
+    private String address;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="fk_assigned_by_user_id", foreignKey = @ForeignKey(name="fk_lead_assigned_by"))
+    private User assignedBy;
+
     private LocalDateTime assignedAt;
     
     @Column(updatable = false)
