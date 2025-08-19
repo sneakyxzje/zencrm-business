@@ -1,5 +1,9 @@
 package website.crm_backend.DTOS.LeadDTO;
 
+import java.time.LocalDateTime;
+
+import website.crm_backend.models.enums.LeadStatus;
+
 public record LeadListDTO(
     Integer id,
     String customerName,
@@ -8,11 +12,11 @@ public record LeadListDTO(
     String createdByName,
     String createdByTeam,
     String assigneeName,
-    String assgineeTeam,
-    String status,
+    String assigneeTeam,
+    LeadStatus status,
     String note,
-    String createdAt,
-    String assignedAt
+    LocalDateTime createdAt,
+    LocalDateTime assignedAt
 ) {
     
 }
