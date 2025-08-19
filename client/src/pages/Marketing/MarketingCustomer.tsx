@@ -293,7 +293,9 @@ const MarketingCustomer = () => {
                           </td>
                           <td className="px-6 py-4">
                             <div className="text-sm text-[#dcdcdc]">
-                              {l.assigneeName || (
+                              {l.assigneeName && l.assigneeTeam ? (
+                                `${l.assigneeName}_${l.assigneeTeam}`
+                              ) : (
                                 <span className="text-[#90999a] italic">
                                   Chưa phân bổ
                                 </span>
