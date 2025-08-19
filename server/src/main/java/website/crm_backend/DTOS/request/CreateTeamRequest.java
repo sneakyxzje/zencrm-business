@@ -4,7 +4,7 @@ import website.crm_backend.models.enums.TeamType;
 
 public record CreateTeamRequest(
     String teamName,
-    int managerId,
+    Integer managerId,
     TeamType teamType 
 ) {
     
