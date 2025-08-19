@@ -45,4 +45,18 @@ public class LeadController {
     public ResponseEntity<Page<LeadListDTO>> getAllLeads(Pageable pageable) {
         return ResponseEntity.ok(leadService.getAllLeads(pageable));
     }
+
+    // For sale
+    @PreAuthorize("hasRole('SALE_MANAGER')")
+    @GetMapping("/queue")
+    public ResponseEntity<Page<LeadListDTO>> queue(@RequestParam(name="statuses", required= false) Set<LeadStatus> statuses, @RequestParam(name="statutes", required = false)Boolean assigned, Pageable pageable) {
+        return ResponseEntity.ok(leadService.getAssigmentQueue(statuses, assigned, pageable));
+    }    
+
+    @PreAuthorize("hasRole('SALE_MANAGER')")
+    @PostMapping("assign-lead")
+    public ResponseEntity<AssignLeadResponse> assignLead(@RequestBody AssignLeadRequest request) {
+        return ResponseEntity.ok(leadService.assignLead(request));
+    }
+    
 }
