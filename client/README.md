@@ -23,57 +23,22 @@ A React + Vite + TypeScript CRM front-end, restructured using a **Feature-Sliced
 
 ---
 
-## 🧭 Path Aliases
-
-```json
-// tsconfig.json (excerpt)
-{
-  "compilerOptions": {
-    "baseUrl": "./src",
-    "paths": {
-      "@app/*": ["app/*"],
-      "@routes/*": ["routes/*"],
-      "@processes/*": ["processes/*"],
-      "@pages/*": ["pages/*"],
-      "@widgets/*": ["widgets/*"],
-      "@features/*": ["features/*"],
-      "@entities/*": ["entities/*"],
-      "@shared/*": ["shared/*"]
-    }
-  }
-}
-ts
-Copy
-Edit
-// vite.config.ts (excerpt)
-resolve: {
-  alias: {
-    "@app": path.resolve(__dirname, "src/app"),
-    "@routes": path.resolve(__dirname, "src/routes"),
-    "@processes": path.resolve(__dirname, "src/processes"),
-    "@pages": path.resolve(__dirname, "src/pages"),
-    "@widgets": path.resolve(__dirname, "src/widgets"),
-    "@features": path.resolve(__dirname, "src/features"),
-    "@entities": path.resolve(__dirname, "src/entities"),
-    "@shared": path.resolve(__dirname, "src/shared"),
-  },
-},
-ESLint flat config resolves TS paths for import rules.
-
 🚀 Getting Started
-bash
-Copy
-Edit
+
 # install
+
 npm i
 
 # dev
+
 npm run dev
 
 # type check
+
 npm run type-check
 
 # lint
+
 npm run lint
 Ensure your .env (if any) is placed according to Vite conventions (e.g., .env.local).
 
@@ -86,15 +51,12 @@ Menu stores keys (e.g., "home", "announcement").
 
 Sidebar renders <Icon name="home" /> mapped by a registry:
 
-bash
-Copy
-Edit
 widgets/sidebar/ui/icons/
 ├─ HomeIcon.tsx
 ├─ AnnouncementIcon.tsx
 ├─ ...
-├─ key.ts         # export type IconKey = ...
-└─ index.tsx      # const ICONS = { home: HomeIcon, ... }
+├─ key.ts # export type IconKey = ...
+└─ index.tsx # const ICONS = { home: HomeIcon, ... }
 This keeps menus lightweight and icons swappable.
 
 🧪 Scope of Refactor
@@ -126,12 +88,6 @@ lint — ESLint
 
 type-check — TypeScript project check
 
-(Confirm in package.json for exact names.)
+```
 
-🧯 Troubleshooting
-Aliases not working in ESLint: check eslint.config.ts resolver and tsconfig paths.
-
-SVG as React Components: ensure vite-plugin-svgr is installed & configured, or use inline SVG components.
-
-“Cannot find module @…”: restart dev server after changing tsconfig/vite config.
 ```
