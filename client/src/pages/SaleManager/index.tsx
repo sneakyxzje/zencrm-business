@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import type { Lead } from "@entities/lead/model/types";
 import { getLeadQueue } from "@entities/lead/api";
 import { getAssignableSales } from "@entities/user/api";
-import LeadTable from "./components/LeadTable";
-import LeadDetailsDrawer from "./components/LeadDetailsDrawer";
 import type { AssignableSales } from "@entities/user/model/types";
 import { menuByRole } from "@widgets/sidebar/model/items";
 import Sidebar from "@widgets/sidebar/ui/sidebar";
+import LeadTable from "@pages/SaleManager/components/LeadTable";
+import LeadDetailsDrawer from "@pages/SaleManager/components/LeadDetailsDrawer";
 
 export default function SaleManager() {
   const [leads, setLeads] = useState<Lead[]>([]);
@@ -62,9 +62,6 @@ export default function SaleManager() {
         lead={selectedLead}
         sales={sales}
         onClose={() => setShowDetails(false)}
-        onAssigned={() => {
-          /* optional: refresh queue */
-        }}
       />
     </div>
   );
