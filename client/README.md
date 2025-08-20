@@ -23,6 +23,7 @@ A React + Vite + TypeScript CRM front-end, restructured using a **Feature-Sliced
 
 ---
 
+```
 🚀 Getting Started
 
 # install
@@ -88,6 +89,5 @@ lint — ESLint
 
 type-check — TypeScript project check
 
-```
 
 ```
