@@ -4,6 +4,10 @@ import type {
   LeadUploadRequest,
   UploadResponse,
 } from "@entities/lead/model/types";
+import {
+  type UpdateLeadResponse,
+  type UpdateLeadPayLoad,
+} from "@features/update-lead/model/types";
 import { api } from "@shared/api/axios";
 import type { Page } from "@shared/types/page";
 
@@ -57,6 +61,14 @@ export async function uploadLead(payload: LeadUploadRequest) {
     productName: payload.productName,
     assignee: payload.assignee ?? null,
     address: payload.address ?? null,
+  });
+  return res.data;
+}
+
+export async function updateLead(payload: UpdateLeadPayLoad) {
+  const res = await api.post<UpdateLeadResponse>("/api/leads/update-lead", {
+    leadId: payload.leadId,
+    note: payload.note,
   });
   return res.data;
 }
