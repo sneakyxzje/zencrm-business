@@ -1,10 +1,8 @@
 package website.crm_backend.controllers;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -89,6 +87,20 @@ public class AuthController {
         return ResponseEntity.ok("Login success");
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        ResponseCookie jwt = ResponseCookie.from("jwt", "")
+        .httpOnly(true)
+        .secure(false)
+        .path("/")
+        .maxAge(0)
+        .sameSite("Strict")
+        .build();
+
+        response.addHeader(("Set-Cookie"), jwt.toString());
+
+        return ResponseEntity.noContent().build(); // 204
+    }
     @GetMapping("/info")
     public ResponseEntity<?> getInfo(HttpServletRequest request) {
         var res = Map.of(
