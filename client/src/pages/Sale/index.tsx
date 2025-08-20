@@ -2,17 +2,12 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSaleAssignedLeads } from "@entities/lead/api";
 import type { Lead } from "@entities/lead/model/types";
-import LeadDetailsDrawer from "./components/LeadDetailsDrawer";
-import AssignedLeadCards from "./components/AssignedLeadCards";
-import AssignedLeadTable from "./components/AssignedLeadTable";
 import EmptyState from "@shared/ui/EmptyState";
 
 export default function SalePage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [selected, setSelected] = useState<Lead | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
-  const [openCall, setOpenCall] = useState(false);
-  const [notes, setNotes] = useState("");
 
   useEffect(() => {
     getSaleAssignedLeads({ page: 0, size: 15 })
@@ -104,32 +99,15 @@ export default function SalePage() {
           onClose={() => setOpenDetails(false)}
           onCallClick={(l) => {
             setSelected(l);
-            setOpenCall(true);
           }}
         />
       </AnimatePresence>
-
-      {/* Call modal */}
-      <CallModal
-        open={openCall}
-        phone={selected?.phoneNumber ?? ""}
-        customerName={selected?.customerName}
-        notes={notes}
-        onNotesChange={setNotes}
-        onCancel={() => {
-          setOpenCall(false);
-          setNotes("");
-        }}
-        onComplete={() => {
-          console.log("Call completed:", { notes, leadId: selected?.id });
-          setOpenCall(false);
-          setNotes("");
-        }}
-      />
     </div>
   );
 }
 
-import CallModal from "./components/CallModal";
 import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { menuByRole } from "@widgets/sidebar/model/items";
+import AssignedLeadCards from "@pages/Sale/components/AssignedLeadCards";
+import AssignedLeadTable from "@pages/Sale/components/AssignedLeadTable";
+import LeadDetailsDrawer from "@pages/Sale/components/LeadDetailsDrawer";
