@@ -1,6 +1,6 @@
 export type LeadStatus =
   | "NEW"
-  | "contacted"
+  | "CALLED"
   | "interested"
   | "not_interested"
   | "converted";
