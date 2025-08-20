@@ -1,7 +1,7 @@
 import type {
   AssignLeadPayload,
   AssignLeadResponse,
-} from "@features/assign-lead/model/type";
+} from "@features/assign-lead/model/types";
 import { api } from "@shared/api/axios";
 
 export async function assignLead({ leadId, saleId }: AssignLeadPayload) {
