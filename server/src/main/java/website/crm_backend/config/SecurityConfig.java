@@ -24,7 +24,7 @@ import website.crm_backend.services.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity 
 public class SecurityConfig {
     
     @Autowired
@@ -67,7 +67,6 @@ public class SecurityConfig {
         )
         .authenticationProvider(authenticationProvider())
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        
         return http.build();
     }
 
