@@ -1,7 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { Lead } from "@entities/lead/model/types";
 import StatusBadge from "@entities/lead/ui/StatusBadge";
-import AssignmentBadge from "@shared/ui/AssignmentBadge";
 import { time } from "@shared/lib/time";
 
 export default function LeadTable({
@@ -88,7 +87,6 @@ export default function LeadTable({
                           Chưa phân bổ
                         </span>
                       )}
-                      <AssignmentBadge assigned={!!l.assigneeName} />
                     </div>
                   </td>
                   <td className="px-6 py-4">
