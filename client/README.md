@@ -23,41 +23,6 @@ A React + Vite + TypeScript CRM front-end, restructured using a **Feature-Sliced
 
 ---
 
-## 📁 Folder Structure (FSD Hybrid)
-
-src/
-├─ app/ # App bootstrap, providers, store hooks, global styles
-├─ routes/ # Top-level route composition (if needed)
-├─ processes/ # Cross-cutting flows (e.g., auth state/guards)
-│ └─ auth/
-│ └─ models/ # useAuth, guards
-├─ pages/ # Page-level composition (glue only)
-│ └─ marketing/
-│ └─ upload/ # MarketingUploadPage (uses feature + widgets)
-├─ widgets/ # Reusable UI blocks (Sidebar, tables, headers…)
-│ └─ sidebar/
-│ ├─ model/ # menuByRole, types
-│ └─ ui/ # Sidebar.tsx, icons/, Icon registry
-├─ features/ # Slices of user scenarios (hooks + UI)
-│ └─ lead-upload/
-│ ├─ model/ # useLeadUpload hook
-│ └─ ui/ # LeadUploadForm.tsx
-├─ entities/ # Business entities (API + models)
-│ └─ lead/
-│ ├─ api.ts # uploadLead, list, assign…
-│ └─ model/
-│ └─ types.ts # Lead, Page, UploadRequest…
-└─ shared/ # Shared foundation: libs, api, assets, ui primitives
-├─ api/axios.ts
-├─ lib/time.ts
-└─ ui/...
-
-pgsql
-Copy
-Edit
-
----
-
 ## 🧭 Path Aliases
 
 ```json
