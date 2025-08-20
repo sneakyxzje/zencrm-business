@@ -4,8 +4,8 @@ function getStatusText(status: LeadStatus) {
   switch (status) {
     case "NEW":
       return "Mới";
-    case "contacted":
-      return "Đã liên hệ";
+    case "CALLED":
+      return "Đã gọi";
     case "interested":
       return "Quan tâm";
     case "not_interested":
@@ -20,7 +20,7 @@ function badgeClass(s: LeadStatus) {
   switch (s) {
     case "NEW":
       return "bg-[#27292b] text-[#e6e6e6] border border-[#3f4245]";
-    case "contacted":
+    case "CALLED":
       return "bg-[#1f2a2f]/60 text-[#9fd6ff] border border-[#28414a]";
     case "interested":
       return "bg-[#1f2a22]/60 text-[#a3e1b7] border border-[#274133]";
