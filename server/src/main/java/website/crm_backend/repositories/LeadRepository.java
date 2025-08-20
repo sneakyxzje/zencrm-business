@@ -15,6 +15,10 @@ import website.crm_backend.models.enums.LeadStatus;
 public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecificationExecutor<Lead>{
     Page<Lead> findByAssigneeIsNullAndStatus(LeadStatus status, Pageable pageable);
     Page<Lead> findByAssignee_IdAndStatusIn(int assigneeUserId, Collection<LeadStatus> statutes, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"phone", "createdBy", "createdBy.team", "assignee", "assignee.team"})
+    Page<Lead> findByAssignee_Id(Integer userId, Pageable pageable);
+    
     Page<Lead> findByCreatedBy_IdOrderByCreatedAtDesc(int createdByUserId, Pageable pageable);
     Page<Lead> findByPhone_NumberOrderByCreatedAtDesc(String number, Pageable pageable);
     Optional<Lead> findTopByPhone_NumberOrderByCreatedAtDesc(String number);
