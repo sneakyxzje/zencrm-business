@@ -3,6 +3,8 @@ package website.crm_backend.services;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,9 +15,11 @@ import lombok.RequiredArgsConstructor;
 import website.crm_backend.DTOS.LeadDTO.LeadListDTO;
 import website.crm_backend.DTOS.LeadDTO.LeadLogDTO;
 import website.crm_backend.DTOS.request.AssignLeadRequest;
+import website.crm_backend.DTOS.request.FindLeadRequest;
 import website.crm_backend.DTOS.request.UpdateLeadRequest;
 import website.crm_backend.DTOS.request.UploadLeadRequest;
 import website.crm_backend.DTOS.response.AssignLeadResponse;
+import website.crm_backend.DTOS.response.FindLeadResponse;
 import website.crm_backend.DTOS.response.UpdateLeadResponse;
 import website.crm_backend.DTOS.response.UploadLeadResponse;
 import website.crm_backend.mapper.LeadMapper;
@@ -44,6 +48,7 @@ public class LeadService {
     private final UserRepository userRepo;
     private final LeadLogRepository leadLogRepo;
     private final LeadAssignmentRepository leadAssignRepo;
+    private final Logger log =  LoggerFactory.getLogger(LeadService.class);
 
     // MKT SERVICE
     @Transactional
@@ -81,7 +86,6 @@ public class LeadService {
         var saved = leadRepo.save(lead);
 
 
-
         return new UploadLeadResponse(
             saved.getId(),
             saved.getCreatedBy().getId(),
@@ -105,13 +109,30 @@ public class LeadService {
         );
     }
 
-    @Transactional
     public Page<LeadListDTO> getAllLeads(Pageable pageable) {
         int user = AuthUtils.getUserId();
         return leadRepo.findByCreatedBy_IdOrderByCreatedAtDesc(user, pageable)
         .map(LeadMapper::toListDTO);
     }
 
+
+    public Page<FindLeadResponse> findLead(FindLeadRequest request, Pageable pageable) {
+        String phoneNumber = request.phoneNumber();
+        log.info(phoneNumber);
+        Page<Lead> lead = leadRepo.findByPhone_NumberOrderByCreatedAtDesc(phoneNumber, pageable);
+        if(lead.isEmpty()) {
+            throw new IllegalArgumentException("leadRepo: Phone number not found");
+        }
+            return lead.map(l -> new FindLeadResponse(
+        l.getId(),
+        l.getCreatedBy() != null ? l.getCreatedBy().getFullname() : null,
+        (l.getCreatedBy() != null && l.getCreatedBy().getTeam() != null) ? l.getCreatedBy().getTeam().getTeamName() : null,
+        l.getCreatedAt(),
+        l.getAssignee() != null ? l.getAssignee().getFullname() : null,
+        (l.getAssignee() != null && l.getAssignee().getTeam() != null) ? l.getAssignee().getTeam().getTeamName() : null,
+        l.getStatus()
+    ));
+}
     // SALE SERVICE
     @Transactional()
     public Page<LeadListDTO> saleGetAllLeads(Pageable pageable) {

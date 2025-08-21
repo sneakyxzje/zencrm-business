@@ -1,13 +1,9 @@
+import { SearchPopup } from "@features/find-lead/ui/SearchLead";
 import { motion } from "framer-motion";
 
-export default function Header({
-  stats,
-  searchTerm,
-  onSearch,
-  sortBy,
-  onSortChange,
-  onAddClick,
-}: {
+type SortKey = "newest" | "oldest" | "status" | "assigned";
+
+type HeaderProps = {
   stats: {
     total: number;
     unassigned: number;
@@ -16,10 +12,24 @@ export default function Header({
   };
   searchTerm: string;
   onSearch: (v: string) => void;
-  sortBy: string;
-  onSortChange: (v: string) => void;
+  sortBy: SortKey;
+  onSortChange: (v: SortKey) => void;
   onAddClick: () => void;
-}) {
+  onSearchClick: () => void;
+  searchOpen: boolean;
+  onSearchOpen: (v: boolean) => void;
+};
+
+export default function Header({
+  stats,
+  searchTerm,
+  onSearch,
+  sortBy,
+  onAddClick,
+  searchOpen,
+  onSearchClick,
+  onSearchOpen,
+}: HeaderProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: -12 }}
@@ -42,16 +52,13 @@ export default function Header({
               </span>
               Customer Phone Management
             </h1>
-            <p className="text-[#a7b0b1] mt-1">
-              Quản lý danh sách số điện thoại và phân bổ cho sales team
-            </p>
           </div>
-
+          {}
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.98 }}
             onClick={onAddClick}
-            className="bg-[#f48024] hover:bg-[#e06a00] text-white px-4 py-2 rounded-xl font-medium transition-all inline-flex items-center gap-2 shadow-lg"
+            className="bg-[#f48024] cursor-pointer hover:bg-[#e06a00] text-white px-4 py-2 rounded-xl font-medium transition-all inline-flex items-center gap-2 shadow-lg"
           >
             <svg
               className="w-4 h-4"
@@ -102,10 +109,16 @@ export default function Header({
             />
             <span className="pointer-events-none absolute -inset-[1.5px] rounded-[14px] bg-gradient-to-r from-[#f48024]/0 via-[#f48024]/15 to-[#ff8a00]/0 opacity-0 group-focus-within:opacity-100 transition-opacity duration-300" />
           </div>
-
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onSearchClick}
+            className="bg-[#33373a] cursor-pointer hover:bg-[#3a3e42] text-white px-4 py-2 rounded-xl font-medium transition-all inline-flex items-center gap-2 border border-[#3f4245]"
+          >
+            Tra cứu
+          </motion.button>
           <select
             value={sortBy}
-            onChange={(e) => onSortChange(e.target.value)}
             className="bg-[#27292b] border border-[#3f4245] rounded-xl px-4 py-3 text-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024]"
           >
             <option value="newest">Mới nhất</option>
@@ -114,6 +127,7 @@ export default function Header({
             <option value="assigned">Phân bổ</option>
           </select>
         </div>
+        <SearchPopup open={searchOpen} onOpenChange={onSearchOpen} />
       </div>
     </motion.div>
   );

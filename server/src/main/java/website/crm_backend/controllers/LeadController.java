@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import website.crm_backend.DTOS.LeadDTO.LeadListDTO;
 import website.crm_backend.DTOS.request.AssignLeadRequest;
+import website.crm_backend.DTOS.request.FindLeadRequest;
 import website.crm_backend.DTOS.request.UpdateLeadRequest;
 import website.crm_backend.DTOS.request.UploadLeadRequest;
 import website.crm_backend.DTOS.response.AssignLeadResponse;
+import website.crm_backend.DTOS.response.FindLeadResponse;
 import website.crm_backend.DTOS.response.UpdateLeadResponse;
 import website.crm_backend.DTOS.response.UploadLeadResponse;
 import website.crm_backend.models.enums.LeadStatus;
@@ -46,6 +48,11 @@ public class LeadController {
     @GetMapping("/marketing/list")    
     public ResponseEntity<Page<LeadListDTO>> getAllLeads(Pageable pageable) {
         return ResponseEntity.ok(leadService.getAllLeads(pageable));
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<Page<FindLeadResponse>> findLeads(FindLeadRequest request, Pageable pageable) {
+        return ResponseEntity.ok(leadService.findLead(request, pageable));
     }
 
     @PreAuthorize("hasRole('SALE')")

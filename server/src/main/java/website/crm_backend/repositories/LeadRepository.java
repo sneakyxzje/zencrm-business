@@ -20,7 +20,10 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecifi
     Page<Lead> findByAssignee_Id(Integer userId, Pageable pageable);
     
     Page<Lead> findByCreatedBy_IdOrderByCreatedAtDesc(int createdByUserId, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"phone", "createdBy", "assignee"})
     Page<Lead> findByPhone_NumberOrderByCreatedAtDesc(String number, Pageable pageable);
+
     Optional<Lead> findTopByPhone_NumberOrderByCreatedAtDesc(String number);
 
     @EntityGraph(attributePaths = {"phone", "assignee"})

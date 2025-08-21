@@ -1,24 +1,23 @@
 // src/pages/marketing/customers/index.tsx
 import { useEffect, useMemo, useState } from "react";
 import { getMarketingLeads } from "@entities/lead/api";
-import type { Lead } from "@entities/lead/model/types";
+import { type Lead } from "@entities/lead/model/types";
 import dayjs from "dayjs";
 
-import LeadTable from "./components/LeadTable";
-import LeadDetailsDrawer from "./components/LeadDetailsDrawer";
 import EmptyState from "@shared/ui/EmptyState";
 import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { menuByRole } from "@widgets/sidebar/model/items";
-import Header from "@pages/marketing/customers/components/header";
-
+import LeadTable from "@pages/Marketing/customers/components/LeadTable";
+import LeadDetailsDrawer from "@pages/Sale/components/LeadDetailsDrawer";
+import Header from "@pages/Marketing/customers/components/header";
+type SortKey = "newest" | "oldest" | "status" | "assigned";
 export default function MarketingCustomersPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState<
-    "newest" | "oldest" | "status" | "assigned"
-  >("newest");
+  const [sortBy, setSortBy] = useState<SortKey>("newest");
   const [selected, setSelected] = useState<Lead | null>(null);
   const [openDetails, setOpenDetails] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     getMarketingLeads({ page: 0, size: 15 })
@@ -76,7 +75,6 @@ export default function MarketingCustomersPage() {
           );
         case "assigned": {
           const asn = (x: Lead) => (x.assigneeName ? 1 : 0);
-          // ưu tiên đã phân bổ trước
           return asn(b) - asn(a);
         }
         default:
@@ -101,6 +99,9 @@ export default function MarketingCustomersPage() {
           onAddClick={() => {
             window.location.href = "/upload";
           }}
+          onSearchClick={() => setSearchOpen(true)}
+          searchOpen={searchOpen}
+          onSearchOpen={setSearchOpen}
         />
 
         {/* Table Section */}
