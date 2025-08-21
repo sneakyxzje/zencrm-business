@@ -1,8 +1,9 @@
-import type {
-  Lead,
-  LeadStatus,
-  LeadUploadRequest,
-  UploadResponse,
+import {
+  type FindLeadResponse,
+  type Lead,
+  type LeadStatus,
+  type LeadUploadRequest,
+  type UploadResponse,
 } from "@entities/lead/model/types";
 import {
   type UpdateLeadResponse,
@@ -11,7 +12,7 @@ import {
 import { api } from "@shared/api/axios";
 import type { Page } from "@shared/types/page";
 
-// MARKETING ZONE - read
+// MARKETING ZONE
 export async function getMarketingLeads(params?: {
   page?: number;
   size?: number;
@@ -69,6 +70,14 @@ export async function updateLead(payload: UpdateLeadPayLoad) {
   const res = await api.post<UpdateLeadResponse>("/api/leads/update-lead", {
     leadId: payload.leadId,
     note: payload.note,
+  });
+  return res.data;
+}
+
+export async function findLead(params?: { phoneNumber: string }) {
+  const { phoneNumber } = params ?? {};
+  const res = await api.get<FindLeadResponse>("/api/leads/find", {
+    params: { phoneNumber },
   });
   return res.data;
 }
