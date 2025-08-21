@@ -38,3 +38,17 @@ export type UploadResponse = {
   address?: string | null;
   createdAt: string;
 };
+
+export type LeadItem = {
+  leadId: number;
+  createdByName: string;
+  createdByTeam: string;
+  createdAt: string;
+  assignee: string;
+  assigneeTeam: string;
+  status: LeadStatus;
+};
+
+export type FindLeadResponse = {
+  content: LeadItem[];
+};
