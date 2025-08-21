@@ -12,7 +12,7 @@ import {
 import { api } from "@shared/api/axios";
 import type { Page } from "@shared/types/page";
 
-// MARKETING ZONE - read
+// MARKETING ZONE
 export async function getMarketingLeads(params?: {
   page?: number;
   size?: number;
