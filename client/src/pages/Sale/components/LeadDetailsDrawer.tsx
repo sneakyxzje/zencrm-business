@@ -11,7 +11,6 @@ export default function LeadDetailsDrawer({
   open: boolean;
   lead: Lead | null;
   onClose: () => void;
-  onCallClick: (l: Lead) => void;
 }) {
   if (!open || !lead) return null;
 
