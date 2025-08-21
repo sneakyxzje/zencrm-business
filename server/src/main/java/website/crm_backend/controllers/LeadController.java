@@ -22,7 +22,6 @@ import website.crm_backend.DTOS.response.FindLeadResponse;
 import website.crm_backend.DTOS.response.UpdateLeadResponse;
 import website.crm_backend.DTOS.response.UploadLeadResponse;
 import website.crm_backend.models.enums.LeadStatus;
-import website.crm_backend.repositories.projection.LeadRow;
 import website.crm_backend.services.LeadService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
