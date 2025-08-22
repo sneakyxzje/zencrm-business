@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAppDispatch, useAppSelector } from "@app/store/hooks";
 import { checkAuthStatus, login } from "@entities/user/model/slice";
+import { useToast } from "@app/provider/ToastContext";
 
 const LoginView = () => {
   const [email, setEmail] = useState<string>("");
@@ -9,7 +10,7 @@ const LoginView = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { isLoggingin, isLoggedin } = useAppSelector((state) => state.auth);
-
+  const { addToast } = useToast();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -18,6 +19,13 @@ const LoginView = () => {
         .then(() => {
           dispatch(checkAuthStatus());
         });
+      addToast({
+        type: "success",
+        title: "Successful",
+        message: "Login successfully",
+        persistent: false,
+        duration: 4000,
+      });
     } catch (err) {
       console.log("Login err", err);
     }
@@ -389,7 +397,7 @@ const FormCard = ({
             type="submit"
             disabled={isLoggingin}
             whileTap={{ scale: isLoggingin ? 1 : 0.98 }}
-            className={`mt-7 w-full py-3 rounded-xl font-semibold text-white transition will-change-transform relative overflow-hidden
+            className={`mt-7 w-full py-3 cursor-pointer rounded-xl font-semibold text-white transition will-change-transform relative overflow-hidden
               ${
                 isLoggingin
                   ? "bg-[#555] cursor-not-allowed"
