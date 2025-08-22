@@ -37,7 +37,7 @@ export default function LeadDetailsDrawer({
   }, [q, sales]);
 
   if (!open || !lead) return null;
-  const isValid = saleId !== null; // ✅ fix bug
+  const isValid = saleId !== null;
 
   return (
     <>
@@ -65,8 +65,9 @@ export default function LeadDetailsDrawer({
           className="p-6 flex-1 overflow-y-auto"
           onSubmit={async (e) => {
             e.preventDefault();
+            console.log(lead.id);
             if (!isValid) return alert("Id sale k duoc null");
-            await assignLead({ leadId: lead.id, saleId: saleId! });
+            await assignLead({ leadId: lead.id, saleId: saleId });
             onAssigned?.();
             onClose();
           }}
