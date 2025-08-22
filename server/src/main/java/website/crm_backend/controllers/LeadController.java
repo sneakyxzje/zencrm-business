@@ -1,30 +1,17 @@
 package website.crm_backend.controllers;
 
 
-import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import website.crm_backend.DTOS.LeadDTO.LeadListDTO;
-import website.crm_backend.DTOS.request.AssignLeadRequest;
 import website.crm_backend.DTOS.request.FindLeadRequest;
-import website.crm_backend.DTOS.request.UpdateLeadRequest;
-import website.crm_backend.DTOS.request.UploadLeadRequest;
-import website.crm_backend.DTOS.response.AssignLeadResponse;
 import website.crm_backend.DTOS.response.FindLeadResponse;
-import website.crm_backend.DTOS.response.UpdateLeadResponse;
-import website.crm_backend.DTOS.response.UploadLeadResponse;
-import website.crm_backend.models.enums.LeadStatus;
 import website.crm_backend.services.LeadService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -37,47 +24,9 @@ public class LeadController {
     
     private final LeadService leadService;
 
-    @PreAuthorize("hasAnyRole('MARKETING', 'MARKETING_MANAGER')")
-    @PostMapping("/upload")
-    public ResponseEntity<UploadLeadResponse> uploadLead(@RequestBody UploadLeadRequest request) {
-        return ResponseEntity.ok(leadService.uploadLead(request));        
-    } 
-
-    // For marketing
-    @PreAuthorize("hasAnyRole('MARKETING', 'MARKETING_MANAGER')")
-    @GetMapping("/marketing/list")    
-    public ResponseEntity<Page<LeadListDTO>> getAllLeads(Pageable pageable) {
-        return ResponseEntity.ok(leadService.getAllLeads(pageable));
-    }
-
-    @GetMapping("/find")
+    @GetMapping
     public ResponseEntity<Page<FindLeadResponse>> findLeads(FindLeadRequest request, Pageable pageable) {
         return ResponseEntity.ok(leadService.findLead(request, pageable));
     }
 
-    @PreAuthorize("hasRole('SALE')")
-    @GetMapping("/sale/list")
-    public ResponseEntity<Page<LeadListDTO>> saleGetAllLeads(Pageable pageable) {
-        return ResponseEntity.ok(leadService.saleGetAllLeads(pageable));
-    }
-
-    // For sale manager
-    @PreAuthorize("hasRole('SALE_MANAGER')")
-    @GetMapping("/queue")
-    public ResponseEntity<Page<LeadListDTO>> queue(@RequestParam(name="statuses", required= false) Set<LeadStatus> statuses, @RequestParam(name="statutes", required = false)Boolean assigned, Pageable pageable) {
-        return ResponseEntity.ok(leadService.getAssigmentQueue(statuses, assigned, pageable));
-    }    
-
-    @PreAuthorize("hasRole('SALE_MANAGER')")
-    @PostMapping("/assign-lead")
-    public ResponseEntity<AssignLeadResponse> assignLead(@RequestBody AssignLeadRequest request) {
-        return ResponseEntity.ok(leadService.assignLead(request));
-    }
- 
-    // SALE 
-    @PreAuthorize("hasRole('SALE')")
-    @PostMapping("/update-lead")
-    public ResponseEntity<UpdateLeadResponse> updateLead(@RequestBody UpdateLeadRequest request) {
-        return ResponseEntity.ok(leadService.updateLead(request));
-    }
 }
