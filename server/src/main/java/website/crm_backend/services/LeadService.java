@@ -141,8 +141,7 @@ public class LeadService {
     }
 
     @Transactional() 
-    public UpdateLeadResponse updateLead(UpdateLeadRequest request) {
-        int leadId = request.leadId();
+    public UpdateLeadResponse updateLead(int leadId, UpdateLeadRequest request) {
         String note = request.note();
 
         Lead lead = leadRepo.findById(leadId)
@@ -181,17 +180,16 @@ public class LeadService {
     }
 
     @Transactional 
-    public AssignLeadResponse assignLead(AssignLeadRequest request) {
+    public AssignLeadResponse assignLead(int leadId, AssignLeadRequest request) {
         User actor = userRepo.getReferenceById(AuthUtils.getUserId());
         Integer saleId = request.saleId();
-        Integer leadId = request.leadId();
         User assignee = userRepo.getReferenceById(saleId);
 
         Lead lead = leadRepo.findById(leadId)
         .orElseThrow(() -> new IllegalArgumentException("LeadRepo: Lead not found"));
 
-        if(leadId == null || saleId == null ) {
-            throw new IllegalArgumentException("leadId and saleId are required");
+        if( saleId == null ) {
+            throw new IllegalArgumentException("saleId are required");
         }
         lead.setAssignee(assignee);
         lead.setAssignedAt(LocalDateTime.now());
