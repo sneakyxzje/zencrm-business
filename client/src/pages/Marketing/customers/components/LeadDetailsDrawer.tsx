@@ -7,7 +7,6 @@ export default function LeadDetailsDrawer({
   open,
   lead,
   onClose,
-  onCallClick,
 }: {
   open: boolean;
   lead: Lead | null;
@@ -110,10 +109,7 @@ export default function LeadDetailsDrawer({
 
         {/* Action Buttons */}
         <div className="p-4 border-t border-[#3f4245] bg-[#2a2c2e] space-y-3">
-          <button
-            onClick={() => onCallClick(lead)}
-            className="w-full py-3 bg-[#10b981] hover:bg-[#059669] text-white font-medium rounded-lg transition-colors flex items-center justify-center space-x-2"
-          >
+          <button className="w-full py-3 bg-[#10b981] hover:bg-[#059669] text-white font-medium rounded-lg transition-colors flex items-center justify-center space-x-2">
             <svg
               className="w-4 h-4"
               fill="none"
