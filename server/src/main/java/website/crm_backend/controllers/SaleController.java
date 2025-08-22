@@ -21,12 +21,11 @@ public class SaleController {
 
     @GetMapping
     public ResponseEntity<Page<AssignableSaleResponse>> findSales(
-        @RequestParam(name="role", required = false) String role,
         @RequestParam(name="q", required = false) String q,
         @RequestParam(name="teamId", required = false) Integer teamId,
         Pageable pageable
     ) {
-        Page<AssignableSaleResponse> userPage = userService.getAssignableSales(role, q, teamId, pageable);
+        Page<AssignableSaleResponse> userPage = userService.getAssignableSales(q, teamId, pageable);
         return ResponseEntity.ok(userPage);
     }
 }
