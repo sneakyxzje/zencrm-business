@@ -5,9 +5,7 @@ import type {
 import { api } from "@shared/api/axios";
 
 export async function assignLead({ leadId, saleId }: AssignLeadPayload) {
-  const { data } = await api.post<AssignLeadResponse>(
-    "/api/leads/assign-lead",
-    { leadId, saleId }
-  );
+  const url = `/api/sale/leads/${leadId}/assignment`;
+  const { data } = await api.post<AssignLeadResponse>(url, { saleId });
   return data;
 }
