@@ -23,18 +23,17 @@ public class UserService {
         Integer teamId,
         Pageable pageable
     ) {
-        Specification<User> spec = (r, query ,cb) -> cb.conjunction();
-        spec = spec.and(UserSpecs.roleIs(UserRole.ROLE_SALE))
-        .and(UserSpecs.teamIdEquals(teamId))
-        .and(UserSpecs.nameContains(q));
-
-        return userRepo.findAll(spec, pageable)
-        .map(u -> new AssignableSaleResponse(
-            u.getId(),
-            u.getFullname(),
-            u.getTeam().getId(),
-            u.getTeam().getTeamName(),
-            u.getTeam().getTeamType()
-        ));
+            Specification<User> spec = (r, query ,cb) -> cb.conjunction();
+            spec = spec.and(UserSpecs.roleIs(UserRole.ROLE_SALE))
+            .and(UserSpecs.teamIdEquals(teamId))
+            .and(UserSpecs.nameContains(q));
+            return userRepo.findAll(spec, pageable)
+            .map(u -> new AssignableSaleResponse(
+                u.getId(),
+                u.getFullname(),
+                u.getTeam().getId(),
+                u.getTeam().getTeamName(),
+                u.getTeam().getTeamType()
+            ));
     }
 }
