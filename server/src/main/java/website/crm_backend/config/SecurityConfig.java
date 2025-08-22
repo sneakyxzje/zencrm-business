@@ -41,7 +41,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(List.of("http://localhost:5173"));
         config.setAllowCredentials(true);
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH"));
         config.setAllowedHeaders(List.of("*"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -59,7 +59,7 @@ public class SecurityConfig {
         .requestMatchers("/api/auth/info").authenticated()
         .requestMatchers("/api/admin/**").hasRole("ADMIN")
         .requestMatchers("/api/marketing/**").hasRole("MARKETING")
-        .requestMatchers("/api/sale/**").hasRole("SALE")
+        .requestMatchers("/api/sale/**").hasAnyRole("SALE", "SALE_MANAGER")
         .anyRequest().authenticated()
         )
         .sessionManagement(session -> session
