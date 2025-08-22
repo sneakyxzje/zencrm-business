@@ -18,7 +18,7 @@ export async function getMarketingLeads(params?: {
   size?: number;
 }) {
   const { page = 0, size = 15 } = params ?? {};
-  const { data } = await api.get<Page<Lead>>("/api/leads/marketing/list", {
+  const { data } = await api.get<Page<Lead>>("/api/marketing/leads", {
     params: { page, size },
   });
   return data;
@@ -30,7 +30,7 @@ export async function getSaleAssignedLeads(params?: {
   size?: number;
 }) {
   const { page = 0, size = 15 } = params ?? {};
-  const { data } = await api.get<Page<Lead>>("/api/leads/sale/list", {
+  const { data } = await api.get<Page<Lead>>("/api/sale/leads", {
     params: { page, size },
   });
   return data;
@@ -49,14 +49,17 @@ export async function getLeadQueue(params?: {
     statuses = ["NEW"],
     assigned = false,
   } = params ?? {};
-  const { data } = await api.get<Page<Lead>>("/api/leads/queue", {
-    params: { page, size, statuses, assigned },
-  });
+  const { data } = await api.get<Page<Lead>>(
+    "/api/sale/leads/assignment-queue",
+    {
+      params: { page, size, statuses, assigned },
+    }
+  );
   return data;
 }
 
 export async function uploadLead(payload: LeadUploadRequest) {
-  const res = await api.post<UploadResponse>("/api/leads/upload", {
+  const res = await api.post<UploadResponse>("/api/marketing/leads", {
     customerName: payload.customerName,
     phoneNumber: payload.phoneNumber,
     productName: payload.productName,
@@ -67,10 +70,8 @@ export async function uploadLead(payload: LeadUploadRequest) {
 }
 
 export async function updateLead(payload: UpdateLeadPayLoad) {
-  const res = await api.post<UpdateLeadResponse>("/api/leads/update-lead", {
-    leadId: payload.leadId,
-    note: payload.note,
-  });
+  const url = `/api/sale/leads/${payload.leadId}`;
+  const res = await api.patch<UpdateLeadResponse>(url, { note: payload.note });
   return res.data;
 }
 
