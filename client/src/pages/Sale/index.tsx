@@ -97,9 +97,6 @@ export default function SalePage() {
           open={openDetails}
           lead={selected}
           onClose={() => setOpenDetails(false)}
-          onCallClick={(l) => {
-            setSelected(l);
-          }}
         />
       </AnimatePresence>
     </div>
