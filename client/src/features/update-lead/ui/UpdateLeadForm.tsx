@@ -1,3 +1,4 @@
+import { useToast } from "@app/provider/ToastContext";
 import { useUpdateLead } from "@features/update-lead/model/useUpdateLead";
 import { useState } from "react";
 
@@ -6,11 +7,20 @@ type Props = { leadId: number };
 export default function UpdateLeadForm({ leadId }: Props) {
   const [note, setNote] = useState<string>("");
   const { submit, error, loading } = useUpdateLead();
-
+  const { addToast } = useToast();
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const ok = await submit({ leadId, note });
-    if (ok) alert("Update success");
+    if (ok) {
+      addToast({
+        type: "success",
+        title: "Successful",
+        message: "Update Successfully",
+        persistent: false,
+        duration: 4000,
+      });
+
+    }
   }
 
   return (
