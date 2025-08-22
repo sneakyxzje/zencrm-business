@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { useLeadUpload } from "../model/useLeadUpload";
+import { useToast } from "@app/provider/ToastContext";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   currentUserName?: string | null;
@@ -31,10 +33,21 @@ export default function LeadUploadForm({
     assignee: "",
   });
 
+  const { addToast } = useToast();
+  const navigate = useNavigate();
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const ok = await submit();
-    if (ok) alert("Upload success");
+    if (ok) {
+      addToast({
+        type: "success",
+        title: "Successful",
+        message: "Upload successfully",
+        persistent: false,
+        duration: 4000,
+      });
+      navigate("/customers");
+    }
   }
 
   return (
@@ -191,9 +204,9 @@ export default function LeadUploadForm({
               whileTap={{ scale: 0.98 }}
               disabled={loading}
               type="submit"
-              className="flex-1 py-3 rounded-xl font-semibold text-white bg-[#f48024] hover:bg-[#e06a00] transition shadow-lg disabled:opacity-60"
+              className="flex-1 py-3 rounded-xl cursor-pointer font-semibold text-white bg-[#f48024] hover:bg-[#e06a00] transition shadow-lg disabled:opacity-60"
             >
-              {loading ? "Đang up..." : "Up Số"}
+              {loading ? "Đang up..." : "Upload"}
             </motion.button>
           </div>
 
