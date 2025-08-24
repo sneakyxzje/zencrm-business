@@ -7,17 +7,17 @@ import dayjs from "dayjs";
 import EmptyState from "@shared/ui/EmptyState";
 import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { menuByRole } from "@widgets/sidebar/model/items";
-import LeadTable from "@pages/Marketing/customers/components/LeadTable";
-import LeadDetailsDrawer from "@pages/Sale/components/LeadDetailsDrawer";
+// import CustomerDetailsPage from "@pages/Marketing/customers/components/CustomerDetailsPage";
 import Header from "@pages/Marketing/customers/components/header";
+import { useNavigate } from "react-router-dom";
+import LeadTable from "@pages/Marketing/leads/LeadTable";
 type SortKey = "newest" | "oldest" | "status" | "assigned";
 export default function MarketingCustomersPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("newest");
-  const [selected, setSelected] = useState<Lead | null>(null);
-  const [openDetails, setOpenDetails] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getMarketingLeads({ page: 0, size: 15 })
@@ -118,8 +118,7 @@ export default function MarketingCustomersPage() {
               <LeadTable
                 leads={filteredSortedLeads}
                 onRowClick={(l) => {
-                  setSelected(l);
-                  setOpenDetails(true);
+                  navigate(`/leads/${l.id}`);
                 }}
               />
             )}
@@ -142,11 +141,7 @@ export default function MarketingCustomersPage() {
         </div>
       </div>
 
-      <LeadDetailsDrawer
-        open={openDetails}
-        lead={selected}
-        onClose={() => setOpenDetails(false)}
-      />
+      {/* <CustomerDetailsPage lead={selected} /> */}
     </div>
   );
 }
