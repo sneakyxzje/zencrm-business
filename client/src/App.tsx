@@ -9,6 +9,7 @@ import SaleManager from "@pages/SaleManager";
 import MarketingCustomersPage from "@pages/Marketing/customers";
 import MarketingUploadPage from "@pages/Marketing/upload/MarketingUpload";
 import { ToastProvider } from "@app/provider/ToastProvider";
+import LeadPage from "@pages/Marketing/leads/LeadPage";
 
 function App() {
   return (
@@ -48,6 +49,17 @@ function App() {
                     ROLE_MARKETING: <MarketingCustomersPage />,
                     ROLE_MARKETING_MANAGER: <MarketingCustomersPage />,
                     ROLE_SALE: <SalePage />,
+                  }}
+                />
+              }
+            />
+
+            <Route
+              path="/leads/:leadId"
+              element={
+                <RoleRoute
+                  map={{
+                    ROLE_MARKETING: <LeadPage />,
                   }}
                 />
               }
