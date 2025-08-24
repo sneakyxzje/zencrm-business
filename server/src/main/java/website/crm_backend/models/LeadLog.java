@@ -15,13 +15,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import website.crm_backend.models.enums.LeadStatus;
 import website.crm_backend.models.enums.LogAction;
 
 @Entity
 @Table(name="lead_log")
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LeadLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +45,10 @@ public class LeadLog {
     @Column(nullable = false)
     private LogAction action;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="target_user_id", foreignKey = @ForeignKey(name="fk_target_user_id"))
+    private User targetUser;
+    
     @Enumerated(EnumType.STRING) private LeadStatus fromStatus;
     @Enumerated(EnumType.STRING) private LeadStatus toStatus;
 
