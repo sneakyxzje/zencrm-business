@@ -1,6 +1,7 @@
 import {
   type FindLeadResponse,
   type Lead,
+  type LeadDetails,
   type LeadStatus,
   type LeadUploadRequest,
   type UploadResponse,
@@ -77,8 +78,14 @@ export async function updateLead(payload: UpdateLeadPayLoad) {
 
 export async function findLead(params?: { phoneNumber: string }) {
   const { phoneNumber } = params ?? {};
-  const res = await api.get<FindLeadResponse>("/api/leads/find", {
+  const res = await api.get<FindLeadResponse>("/api/leads", {
     params: { phoneNumber },
   });
+  return res.data;
+}
+
+export async function getleadDetails(leadId: number) {
+  const url = `/api/leads/${leadId}`;
+  const res = await api.get<LeadDetails>(url);
   return res.data;
 }
