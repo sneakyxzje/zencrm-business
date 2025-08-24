@@ -1,12 +1,12 @@
 import { findLead } from "@entities/lead/api";
 import { type LeadItem } from "@entities/lead/model/types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 export const useFindLead = (phoneNumber: string) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<LeadItem[]>([]);
-  async function submit(): Promise<boolean> {
+  const submit = useCallback(async (): Promise<boolean> => {
     setError(null);
     setLoading(true);
     try {
@@ -16,7 +16,8 @@ export const useFindLead = (phoneNumber: string) => {
       return true;
     } catch (e: any) {
       if (e?.response.status === 403) {
-        setError("Không có");
+        setError("Không có quyền truy cập hoặc không tìm thấy");
+        setResult([]);
       } else {
         setError(e?.message ?? "Tìm kiếm thất bại");
       }
@@ -24,13 +25,13 @@ export const useFindLead = (phoneNumber: string) => {
     } finally {
       setLoading(false);
     }
-  }
+  }, [phoneNumber]);
 
-  function reset() {
+  const reset = useCallback(() => {
     setResult([]);
     setError(null);
     setLoading(false);
-  }
+  }, []);
   return {
     phoneNumber,
     error,
