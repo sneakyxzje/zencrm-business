@@ -1,6 +1,5 @@
 export type AssignLeadPayload = { leadId: number; saleId: number };
 export type AssignLeadResponse = {
-  leadId: number;
   saleId: number;
   saleName: string;
   status: string;
