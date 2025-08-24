@@ -8,7 +8,8 @@ public record LeadLogDTO(
     Integer id,
     LogAction action,
     String actorName,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    String targetUser
 ) {
     
 }
