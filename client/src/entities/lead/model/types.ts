@@ -21,6 +21,20 @@ export type Lead = {
   assignedBy: string | null;
 };
 
+export type LeadDetails = {
+  id: number;
+  address: string;
+  productName: string;
+  createdByName: string;
+  createdByTeamName: string;
+  customerName: string;
+  phoneNumber: string;
+  createdAt: string;
+  assignee: string;
+  assigneeTeam: string;
+  assignedAt: string;
+  note: string;
+};
 export type LeadUploadRequest = {
   customerName: string;
   phoneNumber: string;
