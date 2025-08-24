@@ -24,7 +24,6 @@ export default function Header({
   stats,
   searchTerm,
   onSearch,
-  sortBy,
   onAddClick,
   searchOpen,
   onSearchClick,
@@ -117,10 +116,7 @@ export default function Header({
           >
             Tra cứu
           </motion.button>
-          <select
-            value={sortBy}
-            className="bg-[#27292b] border border-[#3f4245] rounded-xl px-4 py-3 text-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024]"
-          >
+          <select className="bg-[#27292b] border border-[#3f4245] rounded-xl px-4 py-3 text-[#dcdcdc] focus:outline-none focus:ring-2 focus:ring-[#f48024]">
             <option value="newest">Mới nhất</option>
             <option value="oldest">Cũ nhất</option>
             <option value="status">Trạng thái</option>
