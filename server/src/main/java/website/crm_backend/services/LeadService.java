@@ -13,13 +13,13 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import website.crm_backend.DTOS.LeadDTO.LeadListDTO;
-import website.crm_backend.DTOS.LeadDTO.LeadLogDTO;
 import website.crm_backend.DTOS.request.AssignLeadRequest;
 import website.crm_backend.DTOS.request.FindLeadRequest;
 import website.crm_backend.DTOS.request.UpdateLeadRequest;
 import website.crm_backend.DTOS.request.UploadLeadRequest;
 import website.crm_backend.DTOS.response.AssignLeadResponse;
 import website.crm_backend.DTOS.response.FindLeadResponse;
+import website.crm_backend.DTOS.response.GetLeadByIdResponse;
 import website.crm_backend.DTOS.response.UpdateLeadResponse;
 import website.crm_backend.DTOS.response.UploadLeadResponse;
 import website.crm_backend.mapper.LeadMapper;
@@ -49,70 +49,51 @@ public class LeadService {
     private final LeadLogRepository leadLogRepo;
     private final LeadAssignmentRepository leadAssignRepo;
     private final Logger log =  LoggerFactory.getLogger(LeadService.class);
-
+    private final LeadMapper leadMapper;
     // MKT SERVICE
     @Transactional
     public UploadLeadResponse uploadLead(UploadLeadRequest request) {
         var creator = userRepo.getReferenceById(AuthUtils.getUserId());
-        String customerName = request.customerName();
         String phoneNumber = PhoneNumberUtils.normalize(request.phoneNumber());
-        String productName = request.productName();
-        String address = request.address();
-        var phone = phoneRepo.findByNumber(phoneNumber)
+        PhoneNumber phone = phoneRepo.findByNumber(phoneNumber)
         .orElseGet(() -> phoneRepo.save(new PhoneNumber(phoneNumber)));
-        User assignee = null;
-        if(request.assignee() != null) {
-            assignee = userRepo.findById(request.assignee())
-            .orElseThrow(() -> new IllegalArgumentException("Assignee not found"));
-        }
-        
-        var lead = new Lead();
-        
-        lead.setCreatedBy(creator);
-        lead.setCustomerName(customerName);
-        lead.setPhone(phone);
-        lead.setProductName(productName);
-        lead.setAddress(address);
 
-        if(assignee != null) {
-            lead.setAssignee(assignee);
+        Lead lead = Lead.builder()
+        .createdBy(creator)
+        .customerName(request.customerName())
+        .phone(phone)
+        .productName(request.productName())
+        .address(request.address())
+        .build();
+
+        if(request.assignee() != null) {
+            User assignee = userRepo.findById(request.assignee())
+            .orElseThrow(() -> new IllegalArgumentException("Assignee not found"));
+
             lead.setStatus(LeadStatus.ASSIGNED);
+            lead.setAssignee(assignee);
+            lead.setAssignedBy(creator);
             lead.setAssignedAt(LocalDateTime.now());
-        }
-        else {
+        } else {
             lead.setStatus(LeadStatus.NEW);
         }
+        Lead savedLead = leadRepo.save(lead);
 
-        var saved = leadRepo.save(lead);
+        LeadLog log = LeadLog.builder()
+        .lead(savedLead)
+        .actor(creator)
+        .action(LogAction.UPLOAD_NEW)
+        .createdAt(LocalDateTime.now())
+        .build();
+        leadLogRepo.save(log);
 
-
-        return new UploadLeadResponse(
-            saved.getId(),
-            saved.getCreatedBy().getId(),
-            saved.getCreatedBy().getFullname(),
-
-            saved.getCustomerName(),
-            saved.getPhone().getNumber(),
-
-            saved.getProductName(),
-
-            saved.getAssignee() != null ? saved.getAssignee().getId() : null,
-            saved.getAssignee() != null ? saved.getAssignee().getFullname() : null,
-
-            saved.getStatus(),
-
-            saved.getCreatedAt(),
-            saved.getAssignedAt(),
-
-            saved.getAssignedBy() != null ? saved.getAssignedBy().getId() : null,
-            saved.getAssignedBy() != null ? saved.getAssignedBy().getFullname() : null
-        );
+        return leadMapper.toUploadLeadResponse(savedLead);
     }
 
     public Page<LeadListDTO> getAllLeads(Pageable pageable) {
         int user = AuthUtils.getUserId();
         return leadRepo.findByCreatedBy_IdOrderByCreatedAtDesc(user, pageable)
-        .map(LeadMapper::toListDTO);
+        .map(leadMapper::toListDTO);
     }
 
 
@@ -137,7 +118,7 @@ public class LeadService {
     @Transactional()
     public Page<LeadListDTO> saleGetAllLeads(Pageable pageable) {
         int userId = AuthUtils.getUserId();
-        return leadRepo.findByAssignee_Id(userId, pageable).map(LeadMapper::toListDTO);
+        return leadRepo.findByAssignee_Id(userId, pageable).map(leadMapper::toListDTO);
     }
 
     @Transactional() 
@@ -176,33 +157,38 @@ public class LeadService {
         }
 
         Page<Lead> page = leadRepo.findAll(spec, pageable);
-        return page.map(LeadMapper::toListDTO);
+        return page.map(leadMapper::toListDTO);
     }
 
     @Transactional 
     public AssignLeadResponse assignLead(int leadId, AssignLeadRequest request) {
         User actor = userRepo.getReferenceById(AuthUtils.getUserId());
         Integer saleId = request.saleId();
-        User assignee = userRepo.getReferenceById(saleId);
 
         Lead lead = leadRepo.findById(leadId)
         .orElseThrow(() -> new IllegalArgumentException("LeadRepo: Lead not found"));
 
-        if( saleId == null ) {
+        if(saleId == null) {
             throw new IllegalArgumentException("saleId are required");
         }
+
+
+        User assignee = userRepo.findById(saleId)
+        .orElseThrow(() -> new IllegalArgumentException("Assignee not found"));
+        log.info("assignee: ", saleId);
         lead.setAssignee(assignee);
+        lead.setAssignedBy(actor);
         lead.setAssignedAt(LocalDateTime.now());
         leadRepo.save(lead);
+        
+        LeadLog leadLog = LeadLog.builder()
+        .lead(lead)
+        .action(LogAction.ASSIGN)
+        .actor(actor)
+        .targetUser(assignee)
+        .build();
+        leadLogRepo.save(leadLog);
 
-
-        LeadLog log = new LeadLog();
-        log.setLead(lead);
-        log.setActor(actor);
-        log.setAction(LogAction.ASSIGN);
-        leadLogRepo.save(log);
-
-        var logDTO = new LeadLogDTO(log.getId(), log.getAction(),log.getActor().getFullname(),log.getCreatedAt());
 
         LeadAssignment leadAssign = new LeadAssignment();
         leadAssign.setLead(lead);
@@ -211,13 +197,38 @@ public class LeadService {
         leadAssignRepo.save(leadAssign);
 
 
-        return new AssignLeadResponse(
+        return leadMapper.toAssignLeadResponse(lead);
+    }
+
+
+    public GetLeadByIdResponse getLeadById(Integer leadId) {
+        log.info("Lead Id: ", leadId);
+        Lead lead = leadRepo.findById(leadId)
+        .orElseThrow(() -> new IllegalArgumentException("leadRepo: Lead not found"));
+
+        User assignee = lead.getAssignee();
+        String assigneeName = null;
+        String assigneeTeam = null;
+
+        if(assignee != null) {
+            assigneeName = assignee.getFullname();
+            if(assignee.getTeam() != null) {
+                assigneeTeam = assignee.getTeam().getTeamName();
+            }
+        }
+        return new GetLeadByIdResponse (
             lead.getId(),
-            lead.getAssignee().getId(),
-            lead.getAssignee().getFullname(),
-            lead.getStatus(),
-            lead.getAssignedAt(),
-            logDTO
+            lead.getAddress(),
+            lead.getProductName(),
+            lead.getCreatedBy().getFullname(),
+            lead.getCreatedBy().getTeam().getTeamName(),
+            lead.getCustomerName(),
+            lead.getPhone().getNumber(),
+            assigneeName,
+            assigneeTeam,
+            lead.getNote(),
+            lead.getCreatedAt(),
+            lead.getAssignedAt()
         );
     }
 }
