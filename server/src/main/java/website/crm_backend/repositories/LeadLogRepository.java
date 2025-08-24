@@ -10,7 +10,7 @@ import website.crm_backend.models.LeadLog;
 import website.crm_backend.models.enums.LogAction;
 
 public interface LeadLogRepository extends JpaRepository<LeadLog, Integer> {
-    Page<LeadLog> findByLead_IdOrderByCreatedAtDesc(int leadId, Pageable pageable);
+    Page<LeadLog> findByLead_Id(int leadId, Pageable pageable);
     Page<LeadLog> findByActor_IdOrderByCreatedAtDesc(int actorUserId, Pageable pageable);
     List<LeadLog> findTop50ByActionOrderByCreatedAtDesc(LogAction action);
 }
