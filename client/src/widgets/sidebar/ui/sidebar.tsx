@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../processes/auth/models/useAuth";
 import type { SidebarItems } from "@widgets/sidebar/model/types";
-import { displayRole } from "@shared/lib/RoleDisplay";
 import { useAppDispatch } from "@app/store/hooks";
 import { logoutUser } from "@entities/user/model/slice";
 import { Icon } from "@shared/ui/icons";
+import { displayRole } from "@shared/lib/roleDisplay";
 
 type SidebarProps = {
   sideBarItems: SidebarItems[];
