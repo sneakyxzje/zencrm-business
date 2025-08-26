@@ -15,24 +15,29 @@ export default function LeadPage() {
 
   const [leadDetails, setLeadDetails] = useState<LeadDetails | null>(null);
   const [logs, setLogs] = useState<LogType[] | null>(null);
-  console.log(leadId);
   useEffect(() => {
-    if (leadId) {
-      const numericLeadId = parseInt(leadId);
-      getleadDetails(numericLeadId)
-        .then((res) => setLeadDetails(res))
-        .catch(console.error);
+    const fetch = async () => {
+      if (leadId) {
+        try {
+          const numericLeadId = parseInt(leadId);
 
-      getLog(numericLeadId)
-        .then((res) => setLogs(res.content))
-        .catch(console.error);
-    }
+          const [detailsResponse, logResponse] = await Promise.all([
+            getleadDetails(numericLeadId),
+            getLog(numericLeadId),
+          ]);
+          setLeadDetails(detailsResponse);
+          setLogs(logResponse.content);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+    fetch();
   }, [leadId]);
 
   if (!leadDetails) {
     return <div>No lead details found</div>;
   }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -77,8 +82,8 @@ export default function LeadPage() {
 
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="grid grid-cols-12 gap-6 h-full">
-            <div className="col-span-8 space-y-6">
+          <div className="grid grid-cols-3 gap-6 h-full ">
+            <div className="col-span-2 space-y-6">
               {/* Combined Information Card */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
