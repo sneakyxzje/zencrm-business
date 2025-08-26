@@ -23,7 +23,9 @@ public class LogMapper {
             l.getAction(),
             actorName,
             l.getCreatedAt(),
-            targetName
+            targetName,
+            l.getFromStatus(),
+            l.getToStatus()
         );
     }
 }
