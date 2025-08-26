@@ -18,14 +18,14 @@ const LoginView = () => {
         .unwrap()
         .then(() => {
           dispatch(checkAuthStatus());
+          addToast({
+            type: "success",
+            title: "Successful",
+            message: "Login successfully",
+            persistent: false,
+            duration: 4000,
+          });
         });
-      addToast({
-        type: "success",
-        title: "Successful",
-        message: "Login successfully",
-        persistent: false,
-        duration: 4000,
-      });
     } catch (err) {
       console.log("Login err", err);
     }
