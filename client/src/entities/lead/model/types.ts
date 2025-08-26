@@ -1,9 +1,4 @@
-export type LeadStatus =
-  | "NEW"
-  | "CALLED"
-  | "interested"
-  | "not_interested"
-  | "converted";
+export type LeadStatus = "NEW" | "CALLED" | "ASSIGNED" | "IN_PROGRESS";
 export type Lead = {
   id: number;
   customerName: string;
