@@ -83,6 +83,8 @@ public class LeadService {
         .lead(savedLead)
         .actor(creator)
         .action(LogAction.UPLOAD_NEW)
+        .fromStatus(null)
+        .toStatus(lead.getStatus())
         .createdAt(LocalDateTime.now())
         .build();
         leadLogRepo.save(log);
@@ -124,18 +126,40 @@ public class LeadService {
     @Transactional() 
     public UpdateLeadResponse updateLead(int leadId, UpdateLeadRequest request) {
         String note = request.note();
+        int actorId = AuthUtils.getUserId(); 
+        User actor = userRepo.findById(actorId)
+        .orElseThrow(() -> new IllegalArgumentException("userRepo: user not found"));
+        if(note == null || note.trim().isEmpty()) {
+            throw new IllegalArgumentException("Note cannot be null or empty"); 
+        }
 
         Lead lead = leadRepo.findById(leadId)
         .orElseThrow(() -> new IllegalArgumentException("leadRepo: Lead not found"));
         
+        LeadStatus newStatus = request.status();
+        LeadStatus oldStatus = lead.getStatus();
         lead.setNote(note);
-        lead.setStatus(LeadStatus.CALLED);
+        
+        if(newStatus != null && newStatus != oldStatus) {
+            lead.setStatus(newStatus);
+        }
+
+        LeadLog leadLog = LeadLog.builder()
+        .lead(lead)
+        .actor(actor)
+        .action(LogAction.STATUS_CHANGE)
+        .fromStatus(oldStatus)
+        .toStatus(newStatus)
+        .build();
+
+        leadLogRepo.save(leadLog);
         
         return new UpdateLeadResponse(
             lead.getNote(),
             lead.getStatus()
         );
     }
+
     // SALE MANAGER SERVICE
     @Transactional
     public Page<LeadListDTO> getAssigmentQueue(
@@ -149,9 +173,6 @@ public class LeadService {
             spec = spec.and(assigned ? LeadSpecs.hasAssignee() : LeadSpecs.unassigned());
         }
 
-        if(statutes != null && !statutes.isEmpty()) {
-            spec = spec.and(LeadSpecs.statusIn(statutes));
-        }
         if("ROLE_SALE_MANAGER".equals(me)) {
             spec = spec.and(LeadSpecs.createdByTeamType(TeamType.MARKETING));
         }
@@ -178,6 +199,7 @@ public class LeadService {
         log.info("assignee: ", saleId);
         lead.setAssignee(assignee);
         lead.setAssignedBy(actor);
+        lead.setStatus(LeadStatus.ASSIGNED);
         lead.setAssignedAt(LocalDateTime.now());
         leadRepo.save(lead);
         
@@ -185,6 +207,8 @@ public class LeadService {
         .lead(lead)
         .action(LogAction.ASSIGN)
         .actor(actor)
+        .fromStatus(LeadStatus.NEW)
+        .toStatus(LeadStatus.ASSIGNED)
         .targetUser(assignee)
         .build();
         leadLogRepo.save(leadLog);
@@ -202,7 +226,6 @@ public class LeadService {
 
 
     public GetLeadByIdResponse getLeadById(Integer leadId) {
-        log.info("Lead Id: ", leadId);
         Lead lead = leadRepo.findById(leadId)
         .orElseThrow(() -> new IllegalArgumentException("leadRepo: Lead not found"));
 
