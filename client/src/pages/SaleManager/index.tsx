@@ -15,8 +15,10 @@ export default function SaleManager() {
   const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
-    getLeadQueue({ page: 0, size: 15 })
-      .then((res) => setLeads(res.content))
+    getLeadQueue({ page: 0, size: 15, sort: "createdAt,desc" })
+      .then((res) => {
+        setLeads(res.content);
+      })
       .catch(console.error);
   }, []);
   useEffect(() => {
