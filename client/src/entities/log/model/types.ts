@@ -4,4 +4,6 @@ export type LogType = {
   actorName: string;
   createdAt: string;
   targetUser: string;
+  fromStatus: string;
+  toStatus: string;
 };
