@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion} from "framer-motion";
 import { getSaleAssignedLeads } from "@entities/lead/api";
 import type { Lead } from "@entities/lead/model/types";
 import EmptyState from "@shared/ui/EmptyState";
 
 export default function SalePage() {
   const [leads, setLeads] = useState<Lead[]>([]);
-  const [selected, setSelected] = useState<Lead | null>(null);
-  const [openDetails, setOpenDetails] = useState(false);
 
+  const navigate = useNavigate();
   useEffect(() => {
     getSaleAssignedLeads({ page: 0, size: 15 })
       .then((res) => setLeads(res.content))
@@ -52,21 +51,11 @@ export default function SalePage() {
         {/* List */}
         <div className="px-3 mt-10 sm:px-6 pb-6">
           <div className="rounded-3xl border border-[#3f4245] bg-[#2a2c2e]/70 backdrop-blur-md shadow-[0_20px_60px_rgba(0,0,0,0.35)] overflow-hidden">
-            {/* Mobile */}
-            <AssignedLeadCards
-              leads={leads}
-              onSelect={(l) => {
-                setSelected(l);
-                setOpenDetails(true);
-              }}
-            />
-
             {/* Desktop */}
             <AssignedLeadTable
               leads={leads}
               onSelect={(l) => {
-                setSelected(l);
-                setOpenDetails(true);
+                navigate(`/leads/${l.id}`);
               }}
             />
 
@@ -90,21 +79,11 @@ export default function SalePage() {
           </div>
         </div>
       </div>
-
-      {/* Drawer */}
-      <AnimatePresence>
-        <LeadDetailsDrawer
-          open={openDetails}
-          lead={selected}
-          onClose={() => setOpenDetails(false)}
-        />
-      </AnimatePresence>
     </div>
   );
 }
 
 import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { menuByRole } from "@widgets/sidebar/model/items";
-import AssignedLeadCards from "@pages/Sale/components/AssignedLeadCards";
-import AssignedLeadTable from "@pages/Sale/components/AssignedLeadTable";
-import LeadDetailsDrawer from "@pages/Sale/components/LeadDetailsDrawer";
+import AssignedLeadTable from "@pages/Sale/leads/AssignedLeadTable";
+import { useNavigate } from "react-router-dom";
