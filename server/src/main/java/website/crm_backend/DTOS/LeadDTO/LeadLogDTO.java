@@ -2,6 +2,7 @@ package website.crm_backend.DTOS.LeadDTO;
 
 import java.time.LocalDateTime;
 
+import website.crm_backend.models.enums.LeadStatus;
 import website.crm_backend.models.enums.LogAction;
 
 public record LeadLogDTO(
@@ -9,7 +10,9 @@ public record LeadLogDTO(
     LogAction action,
     String actorName,
     LocalDateTime createdAt,
-    String targetUser
+    String targetUser,
+    LeadStatus fromStatus,
+    LeadStatus toStatus
 ) {
     
 }
