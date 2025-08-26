@@ -10,6 +10,7 @@ import MarketingCustomersPage from "@pages/Marketing/customers";
 import MarketingUploadPage from "@pages/Marketing/upload/MarketingUpload";
 import { ToastProvider } from "@app/provider/ToastProvider";
 import LeadPage from "@pages/Marketing/leads/LeadPage";
+import { LeadDetailsPage } from "@pages/Sale/leads/LeadPage";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
                 <RoleRoute
                   map={{
                     ROLE_MARKETING: <LeadPage />,
+                    ROLE_SALE: <LeadDetailsPage />,
                   }}
                 />
               }
