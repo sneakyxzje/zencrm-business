@@ -41,6 +41,7 @@ export async function getSaleAssignedLeads(params?: {
 export async function getLeadQueue(params?: {
   page?: number;
   size?: number;
+  sort: string;
   statuses?: LeadStatus[];
   assigned?: boolean;
 }) {
@@ -48,12 +49,13 @@ export async function getLeadQueue(params?: {
     page = 0,
     size = 15,
     statuses = ["NEW"],
+    sort = "createdAt,desc",
     assigned = false,
   } = params ?? {};
   const { data } = await api.get<Page<Lead>>(
     "/api/sale/leads/assignment-queue",
     {
-      params: { page, size, statuses, assigned },
+      params: { page, size, sort, statuses, assigned },
     }
   );
   return data;
@@ -72,7 +74,10 @@ export async function uploadLead(payload: LeadUploadRequest) {
 
 export async function updateLead(payload: UpdateLeadPayLoad) {
   const url = `/api/sale/leads/${payload.leadId}`;
-  const res = await api.patch<UpdateLeadResponse>(url, { note: payload.note });
+  const res = await api.patch<UpdateLeadResponse>(url, {
+    note: payload.note,
+    status: payload.status,
+  });
   return res.data;
 }
 
