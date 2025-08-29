@@ -8,22 +8,22 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import website.crm_backend.domain.models.PhoneNumber;
+import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.models.logs.LeadLog;
+import website.crm_backend.domain.models.logs.enums.LogAction;
+import website.crm_backend.domain.models.users.User;
+import website.crm_backend.domain.repositories.PhoneNumberRepository;
+import website.crm_backend.domain.repositories.leads.LeadRepository;
+import website.crm_backend.domain.repositories.logs.LeadLogRepository;
+import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.marketings.dtos.request.UploadLeadRequest;
 import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
-import website.crm_backend.models.Lead;
-import website.crm_backend.models.LeadLog;
-import website.crm_backend.models.PhoneNumber;
-import website.crm_backend.models.User;
-import website.crm_backend.models.enums.LeadStatus;
-import website.crm_backend.models.enums.LogAction;
-import website.crm_backend.repositories.LeadLogRepository;
-import website.crm_backend.repositories.LeadRepository;
-import website.crm_backend.repositories.PhoneNumberRepository;
-import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.shared.mapper.LeadMapper;
-import website.crm_backend.utils.AuthUtils;
-import website.crm_backend.utils.PhoneNumberUtils;
+import website.crm_backend.shared.utils.AuthUtils;
+import website.crm_backend.shared.utils.PhoneNumberUtils;
 
 @Service
 @RequiredArgsConstructor

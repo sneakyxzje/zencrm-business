@@ -2,8 +2,8 @@ package website.crm_backend.features.logs.dtos.shared;
 
 import java.time.LocalDateTime;
 
-import website.crm_backend.models.enums.LeadStatus;
-import website.crm_backend.models.enums.LogAction;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.models.logs.enums.LogAction;
 
 public record LeadLogDTO(
     Integer id,

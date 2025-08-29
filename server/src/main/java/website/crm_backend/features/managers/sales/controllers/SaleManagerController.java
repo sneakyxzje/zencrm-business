@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.managers.sales.dtos.request.AssignLeadRequest;
 import website.crm_backend.features.managers.sales.dtos.response.AssignLeadResponse;
 import website.crm_backend.features.managers.sales.services.SaleManagerServices;
-import website.crm_backend.models.enums.LeadStatus;
 
 @RestController
 @RequiredArgsConstructor

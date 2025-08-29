@@ -2,7 +2,7 @@ package website.crm_backend.features.leads.dtos.shared;
 
 import java.time.LocalDateTime;
 
-import website.crm_backend.models.enums.LeadStatus;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
 
 public record LeadListDTO(
     Integer id,

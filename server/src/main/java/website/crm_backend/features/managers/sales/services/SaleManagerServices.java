@@ -10,23 +10,23 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import website.crm_backend.DTOS.request.AssignLeadRequest;
+import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.leads.LeadAssignment;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.models.logs.LeadLog;
+import website.crm_backend.domain.models.logs.enums.LogAction;
+import website.crm_backend.domain.models.teams.enums.TeamType;
+import website.crm_backend.domain.models.users.User;
+import website.crm_backend.domain.repositories.leads.LeadAssignmentRepository;
+import website.crm_backend.domain.repositories.leads.LeadRepository;
+import website.crm_backend.domain.repositories.leads.specs.LeadSpecs;
+import website.crm_backend.domain.repositories.logs.LeadLogRepository;
+import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
+import website.crm_backend.features.managers.sales.dtos.request.AssignLeadRequest;
 import website.crm_backend.features.managers.sales.dtos.response.AssignLeadResponse;
-import website.crm_backend.models.Lead;
-import website.crm_backend.models.LeadAssignment;
-import website.crm_backend.models.LeadLog;
-import website.crm_backend.models.User;
-import website.crm_backend.models.enums.LeadStatus;
-import website.crm_backend.models.enums.LogAction;
-import website.crm_backend.models.enums.TeamType;
-import website.crm_backend.repositories.LeadAssignmentRepository;
-import website.crm_backend.repositories.LeadLogRepository;
-import website.crm_backend.repositories.LeadRepository;
-import website.crm_backend.repositories.UserRepository;
-import website.crm_backend.repositories.spec.LeadSpecs;
 import website.crm_backend.shared.mapper.LeadMapper;
-import website.crm_backend.utils.AuthUtils;
+import website.crm_backend.shared.utils.AuthUtils;
 
 @Service
 @RequiredArgsConstructor

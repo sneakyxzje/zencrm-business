@@ -5,9 +5,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import website.crm_backend.domain.models.logs.LeadLog;
+import website.crm_backend.domain.repositories.logs.LeadLogRepository;
 import website.crm_backend.features.logs.dtos.shared.LeadLogDTO;
-import website.crm_backend.models.LeadLog;
-import website.crm_backend.repositories.LeadLogRepository;
 import website.crm_backend.shared.mapper.LogMapper;
 
 @Service

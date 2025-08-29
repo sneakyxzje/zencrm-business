@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.users.User;
+import website.crm_backend.domain.repositories.leads.LeadRepository;
 import website.crm_backend.features.leads.dtos.request.FindLeadRequest;
 import website.crm_backend.features.leads.dtos.response.FindLeadResponse;
 import website.crm_backend.features.leads.dtos.response.GetLeadByIdResponse;
-import website.crm_backend.models.Lead;
-import website.crm_backend.models.User;
-import website.crm_backend.repositories.LeadRepository;
 
 @Service
 @RequiredArgsConstructor
