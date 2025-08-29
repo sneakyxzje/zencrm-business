@@ -1,0 +1,30 @@
+package website.crm_backend.features.marketings.dtos.response;
+
+import java.time.LocalDateTime;
+
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
+
+public record UploadLeadResponse( 
+
+    int id,
+    
+    Integer createdById,
+    String createdByName,
+
+    String customerName,
+    String phoneNumber,
+
+    String productName,
+
+    Integer assigneeId,
+    String assignee,
+
+    LeadStatus status,
+
+    LocalDateTime createdAt,
+    LocalDateTime assignedAt,
+
+    Integer assignedById,
+    String assignedByName 
+    ) {
+};
