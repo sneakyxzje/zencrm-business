@@ -82,7 +82,7 @@ export default function LeadPage() {
 
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto px-6 py-6">
-          <div className="grid grid-cols-3 gap-6 h-full ">
+          <div className="flex gap-6 justify-center h-full ">
             <div className="col-span-2 space-y-6">
               {/* Combined Information Card */}
               <motion.div
