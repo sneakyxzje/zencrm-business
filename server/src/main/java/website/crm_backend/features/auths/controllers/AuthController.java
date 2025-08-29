@@ -20,16 +20,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
 import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
 import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
 import website.crm_backend.features.auths.services.AuthService;
-import website.crm_backend.repositories.UserRepository;
-import website.crm_backend.security.JwtAuthenticationFilter;
-import website.crm_backend.security.JwtTokenProvider;
-import website.crm_backend.security.UserDetailsImpl;
-import website.crm_backend.utils.AuthUtils;
-import website.crm_backend.utils.CookieUtils;
+import website.crm_backend.shared.security.JwtAuthenticationFilter;
+import website.crm_backend.shared.security.JwtTokenProvider;
+import website.crm_backend.shared.security.UserDetailsImpl;
+import website.crm_backend.shared.utils.AuthUtils;
+import website.crm_backend.shared.utils.CookieUtils;
 
 
 @RestController
