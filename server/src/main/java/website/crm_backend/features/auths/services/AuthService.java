@@ -6,13 +6,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import website.crm_backend.domain.models.teams.Team;
+import website.crm_backend.domain.models.users.User;
+import website.crm_backend.domain.repositories.teams.TeamRepository;
+import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
 import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
 import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
-import website.crm_backend.models.Team;
-import website.crm_backend.models.User;
-import website.crm_backend.repositories.TeamRepository;
-import website.crm_backend.repositories.UserRepository;
 @Service
 public class AuthService {
     @Autowired
