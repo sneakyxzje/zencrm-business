@@ -1,4 +1,4 @@
-package website.crm_backend.features.auth.services;
+package website.crm_backend.features.auths.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -6,9 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import website.crm_backend.DTOS.request.AuthLoginRequest;
-import website.crm_backend.DTOS.request.AuthRegisterRequest;
-import website.crm_backend.DTOS.response.AuthRegisterResponse;
+import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
+import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
+import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
 import website.crm_backend.models.Team;
 import website.crm_backend.models.User;
 import website.crm_backend.repositories.TeamRepository;
