@@ -81,10 +81,13 @@ export async function updateLead(payload: UpdateLeadPayLoad) {
   return res.data;
 }
 
-export async function findLead(params?: { phoneNumber: string }) {
-  const { phoneNumber } = params ?? {};
+export async function findLead(params?: {
+  phoneNumber?: string;
+  status?: string;
+}) {
+  const { phoneNumber, status } = params ?? {};
   const res = await api.get<FindLeadResponse>("/api/leads", {
-    params: { phoneNumber },
+    params: { phoneNumber, status },
   });
   return res.data;
 }
