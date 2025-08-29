@@ -1,4 +1,4 @@
-package website.crm_backend.services;
+package website.crm_backend.features.auth.services;
 
 
 import org.springframework.beans.factory.annotation.Autowired;

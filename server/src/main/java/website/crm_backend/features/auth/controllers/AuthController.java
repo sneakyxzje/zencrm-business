@@ -1,4 +1,4 @@
-package website.crm_backend.controllers;
+package website.crm_backend.features.auth.controllers;
 
 import java.util.Map;
 
@@ -23,11 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import website.crm_backend.DTOS.request.AuthLoginRequest;
 import website.crm_backend.DTOS.request.AuthRegisterRequest;
 import website.crm_backend.DTOS.response.AuthRegisterResponse;
+import website.crm_backend.features.auth.services.AuthService;
 import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.security.JwtAuthenticationFilter;
 import website.crm_backend.security.JwtTokenProvider;
 import website.crm_backend.security.UserDetailsImpl;
-import website.crm_backend.services.AuthService;
 import website.crm_backend.utils.AuthUtils;
 import website.crm_backend.utils.CookieUtils;
 
