@@ -8,7 +8,8 @@ function getStatusText(status: LeadStatus) {
       return "Đã gọi";
     case "ASSIGNED":
       return "ASSIGNED";
-
+    case "IN_PROGRESS":
+      return "IN PROGRESS";
     default:
       return "Khác";
   }
@@ -21,6 +22,8 @@ function badgeClass(s: LeadStatus) {
       return "bg-[#1f2a2f]/60 text-[#9fd6ff] border border-[#28414a]";
     case "ASSIGNED":
       return "bg-[#2a2520]/60 text-[#ffd5b3] border border-[#4a3b2f]";
+    case "IN_PROGRESS":
+      return "bg-orange-500/15 text-orange-400 border border-orange-500/30";
     default:
       return "bg-[#27292b] text-[#cfd4d5] border border-[#3f4245]";
   }
