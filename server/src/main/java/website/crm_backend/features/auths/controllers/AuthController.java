@@ -1,4 +1,4 @@
-package website.crm_backend.features.auth.controllers;
+package website.crm_backend.features.auths.controllers;
 
 import java.util.Map;
 
@@ -20,10 +20,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import website.crm_backend.DTOS.request.AuthLoginRequest;
-import website.crm_backend.DTOS.request.AuthRegisterRequest;
-import website.crm_backend.DTOS.response.AuthRegisterResponse;
-import website.crm_backend.features.auth.services.AuthService;
+import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
+import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
+import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
+import website.crm_backend.features.auths.services.AuthService;
 import website.crm_backend.repositories.UserRepository;
 import website.crm_backend.security.JwtAuthenticationFilter;
 import website.crm_backend.security.JwtTokenProvider;
