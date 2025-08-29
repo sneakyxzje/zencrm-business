@@ -11,7 +11,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
-
 public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecificationExecutor<Lead>{
     Page<Lead> findByAssigneeIsNullAndStatus(LeadStatus status, Pageable pageable);
     Page<Lead> findByAssignee_IdAndStatusIn(int assigneeUserId, Collection<LeadStatus> statutes, Pageable pageable);
