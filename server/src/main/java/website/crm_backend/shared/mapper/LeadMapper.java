@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import website.crm_backend.domain.models.PhoneNumber;
 import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.users.User;
+import website.crm_backend.features.leads.dtos.response.FindLeadResponse;
+import website.crm_backend.features.leads.dtos.response.GetLeadByIdResponse;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.managers.sales.dtos.response.AssignLeadResponse;
 import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
@@ -72,6 +74,59 @@ public class LeadMapper {
         assigneeName,
         lead.getStatus(),
         lead.getAssignedAt()
+        );
+    }
+
+    public FindLeadResponse toFindLeadResponse(Lead lead) {
+        if(lead == null) {
+            return null;
+        }
+        User creator = lead.getCreatedBy();
+        User assignee = lead.getAssignee();
+
+        String creatorName = creator != null ? creator.getFullname() : null;
+        String creatorTeam = creator != null ? creator.getTeam().getTeamName() : null;
+
+        String assigneeName = assignee != null ? assignee.getFullname() : null;
+        String assigneeTeam = assignee != null ? assignee.getTeam().getTeamName() : null;
+        return new FindLeadResponse (
+            lead.getId(),
+            creatorName,
+            creatorTeam,
+            lead.getCreatedAt(),
+            assigneeName,
+            assigneeTeam,
+            lead.getStatus()
+        );
+    }
+
+    public GetLeadByIdResponse toGetLeadById(Lead lead) {
+        if(lead == null) {
+            return null;
+        }
+
+        User creator = lead.getCreatedBy();
+        User assignee = lead.getAssignee();
+
+        String creatorName = creator != null ? creator.getFullname() : null;
+        String creatorTeam = creator != null ? creator.getTeam().getTeamName() : null;
+
+        String assigneeName = assignee != null ? assignee.getFullname() : null;
+        String assigneeTeam = assignee != null ? assignee.getTeam().getTeamName() : null;
+
+        return new GetLeadByIdResponse(
+            lead.getId(),
+            lead.getAddress(),
+            lead.getProductName(),
+            creatorName,
+            creatorTeam,
+            lead.getCustomerName(),
+            lead.getPhone().getNumber(),
+            assigneeName,
+            assigneeTeam,
+            lead.getNote(),
+            lead.getCreatedAt(),
+            lead.getAssignedAt()    
         );
     }
 }
