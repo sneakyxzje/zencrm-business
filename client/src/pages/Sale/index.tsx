@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { motion} from "framer-motion";
 import { getSaleAssignedLeads } from "@entities/lead/api";
 import type { Lead } from "@entities/lead/model/types";
 import EmptyState from "@shared/ui/EmptyState";
@@ -19,34 +18,7 @@ export default function SalePage() {
       <Sidebar sideBarItems={menuByRole.ROLE_SALE} />
 
       <div className="flex-1 overflow-hidden">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="px-3 sm:px-6 pt-4 sm:pt-6"
-        >
-          <div className="rounded-3xl border border-[#3f4245] bg-[#2a2c2e]/80 backdrop-blur-md p-5 sm:p-6 md:p-7 shadow-[0_20px_60px_rgba(0,0,0,0.4)]">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 sm:gap-4">
-              <div className="min-w-0">
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#dcdcdc]">
-                  Customer Management
-                </h1>
-                <p className="text-[#a7b0b1] mt-1 text-sm sm:text-base">
-                  Quản lý và theo dõi khách hàng được phân bổ
-                </p>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-[#a7b0b1]">
-                <span className="inline-flex items-center gap-2 rounded-xl border border-[#3f4245] bg-[#26282a] px-3 py-2">
-                  Tổng:{" "}
-                  <span className="ml-1 font-semibold text-[#dcdcdc]">
-                    {leads.length}
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
+        <Header />
 
         {/* List */}
         <div className="px-3 mt-10 sm:px-6 pb-6">
@@ -87,3 +59,4 @@ import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { menuByRole } from "@widgets/sidebar/model/items";
 import AssignedLeadTable from "@pages/Sale/leads/AssignedLeadTable";
 import { useNavigate } from "react-router-dom";
+import Header from "@pages/Sale/components/header";
