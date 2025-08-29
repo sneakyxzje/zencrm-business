@@ -6,7 +6,7 @@ import website.crm_backend.models.enums.LeadStatus;
 
 public record UploadLeadResponse( 
 
-    Integer id,
+    int id,
     
     Integer createdById,
     String createdByName,
