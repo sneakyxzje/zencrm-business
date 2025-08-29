@@ -1,4 +1,4 @@
-package website.crm_backend.controllers;
+package website.crm_backend.features.leads.controllers;
 
 
 
@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import website.crm_backend.DTOS.request.FindLeadRequest;
-import website.crm_backend.DTOS.response.FindLeadResponse;
-import website.crm_backend.DTOS.response.GetLeadByIdResponse;
-import website.crm_backend.services.LeadService;
+import website.crm_backend.features.leads.dtos.request.FindLeadRequest;
+import website.crm_backend.features.leads.dtos.response.FindLeadResponse;
+import website.crm_backend.features.leads.dtos.response.GetLeadByIdResponse;
+import website.crm_backend.features.leads.services.LeadService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
