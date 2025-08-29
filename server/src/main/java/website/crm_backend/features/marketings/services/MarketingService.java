@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.marketings.dtos.request.UploadLeadRequest;
 import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
-import website.crm_backend.mapper.LeadMapper;
 import website.crm_backend.models.Lead;
 import website.crm_backend.models.LeadLog;
 import website.crm_backend.models.PhoneNumber;
@@ -22,6 +21,7 @@ import website.crm_backend.repositories.LeadLogRepository;
 import website.crm_backend.repositories.LeadRepository;
 import website.crm_backend.repositories.PhoneNumberRepository;
 import website.crm_backend.repositories.UserRepository;
+import website.crm_backend.shared.mapper.LeadMapper;
 import website.crm_backend.utils.AuthUtils;
 import website.crm_backend.utils.PhoneNumberUtils;
 
