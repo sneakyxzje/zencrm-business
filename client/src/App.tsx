@@ -11,6 +11,8 @@ import MarketingUploadPage from "@pages/Marketing/upload/MarketingUpload";
 import { ToastProvider } from "@app/provider/ToastProvider";
 import LeadPage from "@pages/Marketing/leads/LeadPage";
 import { LeadDetailsPage } from "@pages/Sale/leads/LeadPage";
+import { CreateOrder } from "@pages/Sale/order/CreateOrder";
+import { DetailsOrder } from "@pages/Sale/order/DetailsOrder";
 
 function App() {
   return (
@@ -50,6 +52,28 @@ function App() {
                     ROLE_MARKETING: <MarketingCustomersPage />,
                     ROLE_MARKETING_MANAGER: <MarketingCustomersPage />,
                     ROLE_SALE: <SalePage />,
+                  }}
+                />
+              }
+            />
+
+            <Route
+              path="/create-orders"
+              element={
+                <RoleRoute
+                  map={{
+                    ROLE_SALE: <CreateOrder />,
+                  }}
+                />
+              }
+            />
+
+            <Route
+              path="/create-orders/:leadId"
+              element={
+                <RoleRoute
+                  map={{
+                    ROLE_SALE: <DetailsOrder />,
                   }}
                 />
               }
