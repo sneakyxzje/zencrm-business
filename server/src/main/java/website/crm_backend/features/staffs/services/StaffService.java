@@ -1,11 +1,11 @@
 package website.crm_backend.features.staffs.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.domain.models.users.enums.UserRole;
 import website.crm_backend.domain.repositories.users.UserRepository;
@@ -13,10 +13,10 @@ import website.crm_backend.domain.repositories.users.specs.UserSpecs;
 import website.crm_backend.features.staffs.dtos.response.AssignableSaleResponse;
 
 @Service
+@RequiredArgsConstructor
 public class StaffService {
     
-    @Autowired
-    UserRepository userRepo;
+    private final UserRepository userRepo;
     
     public Page<AssignableSaleResponse> getAssignableSales(
         String q,

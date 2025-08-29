@@ -2,7 +2,6 @@ package website.crm_backend.features.auths.controllers;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,42 +15,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
 import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
 import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
 import website.crm_backend.features.auths.services.AuthService;
-import website.crm_backend.shared.security.JwtAuthenticationFilter;
 import website.crm_backend.shared.security.JwtTokenProvider;
 import website.crm_backend.shared.security.UserDetailsImpl;
 import website.crm_backend.shared.utils.AuthUtils;
-import website.crm_backend.shared.utils.CookieUtils;
 
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    @Autowired
-    CookieUtils cookie;
-
-    @Autowired
-    UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<AuthRegisterResponse> register(@Validated @RequestBody AuthRegisterRequest request) {

@@ -1,9 +1,9 @@
 package website.crm_backend.features.teams.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import website.crm_backend.domain.models.teams.Team;
 import website.crm_backend.domain.models.teams.enums.TeamType;
 import website.crm_backend.domain.models.users.User;
@@ -14,13 +14,12 @@ import website.crm_backend.features.teams.dtos.request.CreateTeamRequest;
 import website.crm_backend.features.teams.dtos.response.CreateTeamResponse;
 
 @Service
+@RequiredArgsConstructor
 public class TeamService {
 
-    @Autowired
-    TeamRepository teamRepository;
+    private final TeamRepository teamRepository;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     
     private boolean mapsTo(UserRole userRole, TeamType teamType) {
         return switch(teamType) {

@@ -1,11 +1,11 @@
 package website.crm_backend.features.auths.services;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import website.crm_backend.domain.models.teams.Team;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.domain.repositories.teams.TeamRepository;
@@ -14,15 +14,14 @@ import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
 import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
 import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    private UserRepository userRepository;
 
-    @Autowired 
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private TeamRepository teamRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    private final TeamRepository teamRepository;
 
     @Transactional
     public AuthRegisterResponse registerUser(AuthRegisterRequest request) {
