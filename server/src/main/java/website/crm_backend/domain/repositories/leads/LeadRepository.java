@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
@@ -29,7 +31,8 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecifi
     Page<Lead> findAllByOrderByCreatedAtDesc(Pageable pageable);
 
     @Override
+    @NonNull
     @EntityGraph(attributePaths = {"phone", "createdBy", "assignee"})
-    Page<Lead> findAll(Specification<Lead> spec, Pageable pageable);
+    Page<Lead> findAll(@Nullable Specification<Lead> spec, @Nullable Pageable pageable);
 
 }
