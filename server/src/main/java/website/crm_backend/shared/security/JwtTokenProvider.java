@@ -5,7 +5,6 @@ import java.util.Date;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -15,19 +14,22 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import website.crm_backend.config.JwtConfigProperties;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
+    private final JwtConfigProperties jwtConfigProperties;
     private SecretKey secretKey;
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
-    private final long JWT_EXPIRATION = 86400000;
+    private final long JWT_EXPIRATION = 86400000L;
 
 
     @PostConstruct
     public void init() {
-        secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
+        String secret = jwtConfigProperties.secret();
+        secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     private Claims parseClaims(String token) {
