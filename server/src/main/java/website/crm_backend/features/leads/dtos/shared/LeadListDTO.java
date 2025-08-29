@@ -1,4 +1,4 @@
-package website.crm_backend.DTOS.LeadDTO;
+package website.crm_backend.features.leads.dtos.shared;
 
 import java.time.LocalDateTime;
 
