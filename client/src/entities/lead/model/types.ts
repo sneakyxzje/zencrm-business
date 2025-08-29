@@ -55,6 +55,7 @@ export type LeadItem = {
   createdAt: string;
   assignee: string;
   assigneeTeam: string;
+  product: string;
   status: LeadStatus;
 };
 
