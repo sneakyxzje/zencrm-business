@@ -3,12 +3,12 @@ package website.crm_backend.shared.mapper;
 
 import org.springframework.stereotype.Component;
 
+import website.crm_backend.domain.models.PhoneNumber;
+import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.users.User;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.managers.sales.dtos.response.AssignLeadResponse;
 import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
-import website.crm_backend.models.Lead;
-import website.crm_backend.models.PhoneNumber;
-import website.crm_backend.models.User;
 
 
 @Component

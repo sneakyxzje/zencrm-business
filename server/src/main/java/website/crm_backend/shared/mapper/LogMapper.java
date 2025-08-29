@@ -2,9 +2,9 @@ package website.crm_backend.shared.mapper;
 
 import org.springframework.stereotype.Component;
 
+import website.crm_backend.domain.models.logs.LeadLog;
+import website.crm_backend.domain.models.users.User;
 import website.crm_backend.features.logs.dtos.shared.LeadLogDTO;
-import website.crm_backend.models.LeadLog;
-import website.crm_backend.models.User;
 
 @Component
 public class LogMapper {
