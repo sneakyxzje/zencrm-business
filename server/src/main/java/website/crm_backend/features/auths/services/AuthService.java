@@ -1,6 +1,11 @@
 package website.crm_backend.features.auths.services;
 
 
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +18,8 @@ import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.auths.dtos.request.AuthLoginRequest;
 import website.crm_backend.features.auths.dtos.request.AuthRegisterRequest;
 import website.crm_backend.features.auths.dtos.response.AuthRegisterResponse;
+import website.crm_backend.shared.security.JwtTokenProvider;
+import website.crm_backend.shared.security.UserDetailsImpl;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -22,6 +29,10 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     private final TeamRepository teamRepository;
+
+    private final AuthenticationManager authenticationManager;
+
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public AuthRegisterResponse registerUser(AuthRegisterRequest request) {
@@ -51,19 +62,37 @@ public class AuthService {
         );
     }
     
-    public String login(AuthLoginRequest request) {
-        String email = request.email();
-        String password = request.password();
-        User user = userRepository.findByEmail(email);
-        if(user == null) {
-            return "Account not exists";
-        }
-        
-        if(passwordEncoder.matches(password, user.getPassword())) {
-            return "Login success!";
-        }
-        else {
-            return "Wrong password";
-        }
+    @Transactional
+    public ResponseCookie login(AuthLoginRequest request) {
+         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+            request.email(),
+            request.password()
+            )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        int userId = userDetails.getId();
+        String token = jwtTokenProvider.generateToken(userId, role);
+
+        return ResponseCookie.from("jwt", token)
+        .httpOnly(true)
+        .secure(false) 
+        .path("/")
+        .maxAge(24 * 60 * 60)
+        .sameSite("Strict")
+        .build();
+    }
+
+    public ResponseCookie logout() {
+        return ResponseCookie.from("jwt", "")
+        .httpOnly(true)
+        .secure(false)
+        .path("/")
+        .maxAge(0)
+        .sameSite("Strict")
+        .build();
     }
 }
