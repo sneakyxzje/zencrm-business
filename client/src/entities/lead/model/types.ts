@@ -19,13 +19,13 @@ export type Lead = {
 export type LeadDetails = {
   id: number;
   address: string;
-  productName: string;
+  productId: number;
   createdByName: string;
   createdByTeamName: string;
   customerName: string;
   phoneNumber: string;
   createdAt: string;
-  assignee: string;
+  assignee: number;
   assigneeTeam: string;
   assignedAt: string;
   note: string;
@@ -33,9 +33,9 @@ export type LeadDetails = {
 export type LeadUploadRequest = {
   customerName: string;
   phoneNumber: string;
-  productName: string;
-  assignee?: string | null;
-  address?: string | null;
+  productId: number;
+  assignee: number | null;
+  address: string | null;
 };
 
 export type UploadResponse = {
