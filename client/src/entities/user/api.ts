@@ -9,7 +9,7 @@ export async function getAssignableSales(params?: {
   teamId?: number;
 }) {
   const { page = 0, size = 15, q, teamId } = params ?? {};
-  const { data } = await api.get<Page<AssignableSales>>("/api/users", {
+  const { data } = await api.get<Page<AssignableSales>>("/api/staff", {
     params: { page, size, q, teamId },
   });
   return data;
