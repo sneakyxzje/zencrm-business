@@ -2,23 +2,34 @@ import { motion } from "framer-motion";
 import { useLeadUpload } from "../model/useLeadUpload";
 import { useToast } from "@app/provider/ToastContext";
 import { useNavigate } from "react-router-dom";
+import type { AssignableSales } from "@entities/user/model/types";
+import type { GetAllProduct } from "@entities/product/model/type";
 
 type Props = {
   currentUserName?: string | null;
   currentTeamName?: string | null;
+  currentSaleName?: string | null;
+  currentSaleInfo: AssignableSales[] | null;
+  currentProductInfo: GetAllProduct[] | null;
+  defaultProductId?: number | null;
+  defaultAssigneeId?: number | null;
 };
 
 export default function LeadUploadForm({
   currentUserName,
   currentTeamName,
+  currentSaleInfo,
+  currentProductInfo,
+  defaultAssigneeId,
+  defaultProductId,
 }: Props) {
   const {
     customerName,
     setCustomerName,
     phoneNumber,
     setPhoneNumber,
-    productName,
-    setProductName,
+    productId,
+    setProductId,
     assignee,
     setAssignee,
     address,
@@ -28,9 +39,9 @@ export default function LeadUploadForm({
     error,
     submit,
   } = useLeadUpload({
-    customerName: "",
     teamName: currentTeamName ?? "",
-    assignee: "",
+    defaultProductId: defaultProductId,
+    defaultAssigneeId: defaultAssigneeId,
   });
 
   const { addToast } = useToast();
@@ -53,7 +64,6 @@ export default function LeadUploadForm({
   return (
     <div className="max-w-4xl mx-auto">
       <div className="bg-[#3b3f41]/80 backdrop-blur-md shadow-2xl rounded-3xl p-8 border border-[#4d4d4d]">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#f48024]/80 to-[#f48024] rounded-2xl shadow-lg mb-4">
             <svg
@@ -72,10 +82,8 @@ export default function LeadUploadForm({
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={onSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Người lên số */}
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                 Người lên số
@@ -86,7 +94,6 @@ export default function LeadUploadForm({
                 className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] text-white rounded-xl color-white placeholder-[#dcdcdc] focus:outline-none"
               />
             </div>
-            {/* Thuộc team */}
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                 Thuộc team
@@ -101,7 +108,6 @@ export default function LeadUploadForm({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Tên KH */}
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                 Tên khách hàng
@@ -113,7 +119,6 @@ export default function LeadUploadForm({
                 className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none"
               />
             </div>
-            {/* Số ĐT */}
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
                 Số điện thoại *
@@ -128,42 +133,47 @@ export default function LeadUploadForm({
             </div>
           </div>
 
-          {/* Sản phẩm */}
           <div>
             <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
               Sản phẩm *
             </label>
-            <input
-              type="text"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
-              placeholder="Tên sản phẩm"
+            <select
+              value={productId ?? ""}
+              onChange={(e) =>
+                setProductId(
+                  e.target.value ? parseInt(e.target.value, 10) : null
+                )
+              }
               className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none"
-            />
+            >
+              {currentProductInfo?.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.productName}_{p.categoryName}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Sale (assignee) */}
+          <div>
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
-                Sale (tuỳ chọn)
+                Sale
               </label>
-              <input
-                type="text"
-                value={assignee}
-                onChange={(e) => setAssignee(e.target.value)}
-                placeholder="Trần Thị B"
+              <select
+                value={assignee ?? ""}
+                onChange={(e) =>
+                  setAssignee(
+                    e.target.value ? parseInt(e.target.value, 10) : null
+                  )
+                }
                 className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] placeholder-[#90999a] focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
-                Team sale (hiển thị)
-              </label>
-              <input
-                disabled
-                className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none"
-              />
+              >
+                {currentSaleInfo?.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.fullname}_{s.teamName}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
@@ -191,8 +201,6 @@ export default function LeadUploadForm({
               onClick={() => {
                 setCustomerName("");
                 setPhoneNumber("");
-                setProductName("");
-                setAssignee("");
                 setAddress("");
               }}
               className="flex-1 py-3 rounded-xl font-semibold text-[#dcdcdc] bg-[#2d2d2d] border border-[#4d4d4d] hover:bg-[#3b3f41] transition"
