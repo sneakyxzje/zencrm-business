@@ -13,10 +13,12 @@ import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
 import website.crm_backend.domain.models.logs.LeadLog;
 import website.crm_backend.domain.models.logs.enums.LogAction;
+import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.domain.repositories.PhoneNumberRepository;
 import website.crm_backend.domain.repositories.leads.LeadRepository;
 import website.crm_backend.domain.repositories.logs.LeadLogRepository;
+import website.crm_backend.domain.repositories.products.ProductRepository;
 import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.marketings.dtos.request.UploadLeadRequest;
@@ -34,6 +36,7 @@ public class MarketingService {
     private final LeadRepository leadRepo;
     private final LeadLogRepository leadLogRepo;
     private final LeadMapper leadMapper;
+    private final ProductRepository productRepo;
 
     @Transactional
     public UploadLeadResponse uploadLead(UploadLeadRequest request) {
@@ -41,12 +44,13 @@ public class MarketingService {
         String phoneNumber = PhoneNumberUtils.normalize(request.phoneNumber());
         PhoneNumber phone = phoneRepo.findByNumber(phoneNumber)
         .orElseGet(() -> phoneRepo.save(new PhoneNumber(phoneNumber)));
-
+        Product product = productRepo.findById(request.productId())
+        .orElseThrow(() -> new IllegalArgumentException("Product not found"));
         Lead lead = Lead.builder()
         .createdBy(creator)
         .customerName(request.customerName())
         .phone(phone)
-        .productName(request.productName())
+        .product(product)
         .address(request.address())
         .build();
 
