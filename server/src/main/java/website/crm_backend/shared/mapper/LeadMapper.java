@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import website.crm_backend.domain.models.PhoneNumber;
 import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.features.leads.dtos.response.FindLeadResponse;
 import website.crm_backend.features.leads.dtos.response.GetLeadByIdResponse;
@@ -16,11 +17,13 @@ import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
 @Component
 public class LeadMapper {
     public LeadListDTO toListDTO(Lead l) {
+        Product product = l.getProduct();
+        String productName = product != null ? product.getProductName() : null;
         return new LeadListDTO(
             l.getId(),
             l.getCustomerName(),
             l.getPhone().getNumber(),
-            l.getProductName(),
+            productName,
             l.getCreatedBy().getFullname(),
             l.getCreatedBy().getTeam().getTeamName(),
             l.getAssignee() != null ? l.getAssignee().getFullname() : null,
@@ -48,7 +51,7 @@ public class LeadMapper {
             creator != null ? creator.getFullname() : null,
             lead.getCustomerName(),
             phone != null ? phone.getNumber() : null,
-            lead.getProductName(),
+            lead.getProduct().getProductName(),
             assignee != null ? assignee.getId() : null,
             assignee != null ? assignee.getFullname() : null,
             lead.getStatus(),
@@ -117,7 +120,7 @@ public class LeadMapper {
         return new GetLeadByIdResponse(
             lead.getId(),
             lead.getAddress(),
-            lead.getProductName(),
+            lead.getProduct().getProductName(),
             creatorName,
             creatorTeam,
             lead.getCustomerName(),
