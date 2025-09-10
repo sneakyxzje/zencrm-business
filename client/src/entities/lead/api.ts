@@ -65,7 +65,7 @@ export async function uploadLead(payload: LeadUploadRequest) {
   const res = await api.post<UploadResponse>("/api/marketing/leads", {
     customerName: payload.customerName,
     phoneNumber: payload.phoneNumber,
-    productName: payload.productName,
+    productId: payload.productId,
     assignee: payload.assignee ?? null,
     address: payload.address ?? null,
   });
