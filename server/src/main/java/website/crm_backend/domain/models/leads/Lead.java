@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import website.crm_backend.domain.models.PhoneNumber;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.models.users.User;
 
 import java.time.LocalDateTime;
@@ -59,9 +60,11 @@ public class Lead {
     @Column(length=200, nullable = false)
     private String customerName;
 
-    @Column(length=200)
-    private String productName;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", 
+    foreignKey = @ForeignKey(name = "fk_lead_to_product")) 
+    private Product product;    
+    
     @Column(length=1000)
     private String address;
 
