@@ -1,22 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { uploadLead } from "@entities/lead/api";
 import type { LeadUploadRequest } from "@entities/lead/model/types";
 
 export function useLeadUpload(defaults?: {
-  customerName?: string | null;
   teamName?: string | null;
-  assignee?: string | null;
+  defaultProductId?: number | null;
+  defaultAssigneeId?: number | null;
 }) {
-  const [customerName, setCustomerName] = useState(
-    defaults?.customerName ?? ""
-  );
+  const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [productName, setProductName] = useState("");
-  const [assignee, setAssignee] = useState(defaults?.assignee ?? "");
+  const [productId, setProductId] = useState<number | null>(
+    defaults?.defaultProductId ?? null
+  );
+  const [assignee, setAssignee] = useState<number | null>(
+    defaults?.defaultAssigneeId ?? null
+  );
   const [address, setAddress] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (productId === null && defaults?.defaultProductId) {
+      setProductId(defaults.defaultProductId);
+    }
+    if (assignee === null && defaults?.defaultAssigneeId) {
+      setAssignee(defaults.defaultAssigneeId);
+    }
+  }, [defaults?.defaultProductId, defaults?.defaultAssigneeId]);
   async function submit(): Promise<boolean> {
     setError(null);
 
@@ -24,8 +34,8 @@ export function useLeadUpload(defaults?: {
       setError("Vui lòng nhập số điện thoại");
       return false;
     }
-    if (!productName.trim()) {
-      setError("Vui lòng nhập sản phẩm");
+    if (productId === null) {
+      setError("Vui lòng chọn sản phẩm");
       return false;
     }
 
@@ -34,15 +44,15 @@ export function useLeadUpload(defaults?: {
       const payload: LeadUploadRequest = {
         customerName: customerName,
         phoneNumber: phoneNumber,
-        productName: productName,
-        assignee: assignee || null,
+        productId: productId,
+        assignee: assignee,
         address: address || null,
       };
       await uploadLead(payload);
       setCustomerName("");
       setPhoneNumber("");
-      setProductName("");
-      setAssignee("");
+      setProductId(null);
+      setAssignee(null);
       setAddress("");
       return true;
     } catch (e: any) {
@@ -58,8 +68,8 @@ export function useLeadUpload(defaults?: {
     setCustomerName,
     phoneNumber,
     setPhoneNumber,
-    productName,
-    setProductName,
+    productId,
+    setProductId,
     assignee,
     setAssignee,
     address,
