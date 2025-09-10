@@ -1,8 +1,12 @@
 package website.crm_backend.features.products.services;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -11,8 +15,10 @@ import website.crm_backend.domain.models.categories.Category;
 import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.repositories.categories.CategoryRepository;
 import website.crm_backend.domain.repositories.products.ProductRepository;
+import website.crm_backend.domain.repositories.products.specs.ProductSpec;
 import website.crm_backend.features.products.dtos.request.CreateProductRequest;
 import website.crm_backend.features.products.dtos.response.CreateProductResponse;
+import website.crm_backend.features.products.dtos.response.GetAllProductResponse;
 import website.crm_backend.shared.mapper.ProductMapper;
 
 @Service
@@ -39,5 +45,12 @@ public class ProductService {
         productRepo.save(product);
         
         return productMapper.toCreateProductResponse(product);
+    }
+    public Page<GetAllProductResponse> getAllProduct(String q, Pageable pageable) {
+        Specification<Product> spec = (r, query, cb) -> cb.conjunction();
+        if (q != null && !q.trim().isEmpty()) {
+            spec = spec.and(ProductSpec.productName(q));
+        }
+        return productRepo.findAll(spec, pageable).map(p -> productMapper.toGetAllProductResponse(p));
     }
 }
