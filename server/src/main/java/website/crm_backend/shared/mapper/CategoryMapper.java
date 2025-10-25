@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import website.crm_backend.domain.models.categories.Category;
 import website.crm_backend.features.categories.dtos.response.CreateCategoryResponse;
+import website.crm_backend.features.categories.dtos.shared.CategoryDTO;
 import website.crm_backend.features.products.dtos.shared.ProductDTO;
 
 @Component
@@ -22,6 +23,13 @@ public class CategoryMapper {
             category.getId(),
             category.getCategoryName(),
             productDTO
+        );
+    }
+
+    public CategoryDTO toCategoryDTO(Category category) {
+        return new CategoryDTO(
+            category.getId(),
+            category.getCategoryName()
         );
     }
 }
