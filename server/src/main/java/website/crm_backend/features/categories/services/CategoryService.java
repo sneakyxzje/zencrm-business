@@ -3,6 +3,8 @@ package website.crm_backend.features.categories.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -13,6 +15,7 @@ import website.crm_backend.domain.repositories.categories.CategoryRepository;
 import website.crm_backend.domain.repositories.products.ProductRepository;
 import website.crm_backend.features.categories.dtos.request.CreateCategoryRequest;
 import website.crm_backend.features.categories.dtos.response.CreateCategoryResponse;
+import website.crm_backend.features.categories.dtos.shared.CategoryDTO;
 import website.crm_backend.shared.mapper.CategoryMapper;
 
 @Service
@@ -40,4 +43,8 @@ public class CategoryService {
 
         return categoryMapper.toCreateCategoryResponse(category);
     } 
+
+    public Page<CategoryDTO> getAll(Pageable pageable) {
+        return categoryRepo.findAll(pageable).map(categoryMapper::toCategoryDTO);
+    }
 }
