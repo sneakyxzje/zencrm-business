@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +43,18 @@ public class Product {
 
     private BigDecimal price;
 
+    @Column(name = "base_unit_name")
+    private String baseUnitName; 
+
+    @Column(name = "package_unit_name")
+    private String packageUnitName; 
+
+    @Column(name = "items_per_package")
+    private Integer itemsPerPackage; 
+
+    @Column(nullable = true)
+    private String imageUrl;
+
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -49,4 +63,8 @@ public class Product {
         inverseJoinColumns = @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name ="fk_pcm_category"))
     )
     private Set<Category> categories = new HashSet<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "mainProduct", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Combo> comboOffer = new HashSet<>();
 }
