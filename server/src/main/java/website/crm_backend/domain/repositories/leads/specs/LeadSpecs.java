@@ -4,6 +4,8 @@ import java.util.Set;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import jakarta.persistence.criteria.Join;
+import website.crm_backend.domain.models.PhoneNumber;
 import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
 import website.crm_backend.domain.models.teams.enums.TeamType;
@@ -23,5 +25,16 @@ public class LeadSpecs {
     public static Specification<Lead> statusIn(Set<LeadStatus> sts) {
         if (sts == null) return null;
         return (r, q, cb) -> r.get("status").in(sts);
+    }
+
+    public static Specification<Lead> statusEquals(LeadStatus sts) {
+        return (r,q ,cb) -> cb.equal(r.get("status"), sts);
+    }
+
+    public static Specification<Lead> phoneNumberEquals(String p) {
+        return (r, q, cb) -> {
+            Join<Lead, PhoneNumber> phoneJoin = r.join("phone");
+            return cb.equal(phoneJoin.get("number"), p);
+        };
     }
 }
