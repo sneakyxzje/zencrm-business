@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import website.crm_backend.features.categories.dtos.shared.CategoryDTO;
+import website.crm_backend.features.combos.shared.CreateComboResponse;
 
 
 public record CreateProductResponse(
@@ -11,7 +12,8 @@ public record CreateProductResponse(
     String productName,
     BigDecimal price,
     Integer amount,
-    Set<CategoryDTO> categories
+    Set<CategoryDTO> categories,
+    Set<CreateComboResponse> combos
 ) {
     
 }
