@@ -8,6 +8,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -34,5 +36,18 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecifi
     @NonNull
     @EntityGraph(attributePaths = {"phone", "createdBy", "assignee"})
     Page<Lead> findAll(@Nullable Specification<Lead> spec, @Nullable Pageable pageable);
+
+    @Query("SELECT DISTINCT l from Lead l " +
+    "LEFT JOIN FETCH l.product p " +
+    "LEFT JOIN FETCH l.phone n " +
+    "LEFT JOIN FETCH l.createdBy cb " +
+    "LEFT JOIN FETCH l.assignee a " + 
+    "LEFT JOIN FETCH l.assignedBy ab " +
+
+    "LEFT JOIN FETCH p.comboOffer pc " +
+    "LEFT JOIN FETCH p.categories cat " +
+    "LEFT JOIN FETCH pc.giftItem " +
+    "WHERE l.id = :leadId")
+    Optional<Lead> findDetailById(@Param("leadId") int leadId);
 
 }
