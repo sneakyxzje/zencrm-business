@@ -6,12 +6,15 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import website.crm_backend.domain.models.leads.Lead;
+import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.models.logs.LeadLog;
+import website.crm_backend.domain.models.logs.enums.LogAction;
 import website.crm_backend.domain.models.orders.Order;
 import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.domain.repositories.leads.LeadRepository;
+import website.crm_backend.domain.repositories.logs.LeadLogRepository;
 import website.crm_backend.domain.repositories.orders.OrderRepository;
-import website.crm_backend.domain.repositories.products.ProductRepository;
 import website.crm_backend.features.orders.dtos.request.CreateOrderRequest;
 import website.crm_backend.features.orders.dtos.response.CreateOrderResponse;
 import website.crm_backend.shared.mapper.OrderMapper;
@@ -22,32 +25,27 @@ import website.crm_backend.shared.mapper.OrderMapper;
 public class OrderService {
     
     private final LeadRepository leadRepo;
-    private final ProductRepository productRepo;
     private final OrderRepository orderRepo;
     private final OrderMapper orderMapper;
-    
+    private final LeadLogRepository leadLogRepo;
+
+
     @Transactional
     public CreateOrderResponse createOrder(CreateOrderRequest request) {
-        log.info("Creating order for lead ID: {}", request.leadId());
-        log.info("Product Id", request.productId());
-        log.info("Sale", request.saleId());
-        log.info("Marketing", request.marketingId());
         Lead lead = leadRepo.findById(request.leadId())
         .orElseThrow(() -> new IllegalArgumentException("Lead not found"));
 
-        Product product = productRepo.findById(request.productId())
-        .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        if (lead.getStatus() == LeadStatus.PENDING) {
+            throw new RuntimeException("Lead already converted");
+        }
 
-        log.info(request.leadId().toString());
-        log.info(request.saleId().toString());
-        log.info(request.marketingId().toString());
-        log.info(request.productId().toString());
+        Product product = lead.getProduct();
         User marketing = lead.getCreatedBy();
+        String customerName = lead.getCustomerName();
         User sale = lead.getAssignee();
-
         Order order = Order.builder()
         .address(request.address())
-        .customerName(request.customerName())
+        .customerName(customerName)
         .marketingUser(marketing)
         .saleUser(sale)
         .phoneNumber(request.phoneNumber())
@@ -55,7 +53,18 @@ public class OrderService {
         .product(product)
         .sourceLead(lead)
         .build();
+        
+        lead.setStatus(LeadStatus.PENDING);
+        leadRepo.save(lead);
 
+        LeadLog leadLog = LeadLog.builder()
+        .lead(lead)
+        .action(LogAction.ASSIGN)
+        .actor(sale)
+        .fromStatus(LeadStatus.IN_PROGRESS)
+        .toStatus(LeadStatus.PENDING)
+        .build();
+        leadLogRepo.save(leadLog);
         orderRepo.save(order);
 
         return orderMapper.toCreateOrderResponse(order);
