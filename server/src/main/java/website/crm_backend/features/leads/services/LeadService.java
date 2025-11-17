@@ -36,9 +36,9 @@ public class LeadService {
         Page<Lead> leadPage = leadRepo.findAll(spec, pageable);
         return leadPage.map(leadMapper::toFindLeadResponse);
     }
-   
+    
     public GetLeadByIdResponse getLeadById(Integer leadId) {
-        Lead lead = leadRepo.findById(leadId)
+        Lead lead = leadRepo.findDetailById(leadId)
         .orElseThrow(() -> new IllegalArgumentException("leadRepo: Lead not found"));
 
         return leadMapper.toGetLeadById(lead);
