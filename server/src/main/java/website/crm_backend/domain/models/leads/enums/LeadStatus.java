@@ -5,5 +5,6 @@ public enum LeadStatus {
     CALLED,
     IN_PROGRESS,
     ASSIGNED,
-    CLOSED
+    CLOSED,
+    PENDING
 }
