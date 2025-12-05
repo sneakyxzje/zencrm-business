@@ -50,4 +50,6 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecifi
     "WHERE l.id = :leadId")
     Optional<Lead> findDetailById(@Param("leadId") int leadId);
 
+    @Query("SELECT l FROM Lead l WHERE l.phone.number LIKE CONCAT('%', :search, '%')")
+    Page<Lead> findBySearch(@Param("search") String search, Pageable pageable);
 }
