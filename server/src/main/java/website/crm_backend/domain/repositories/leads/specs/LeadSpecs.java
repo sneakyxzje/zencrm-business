@@ -37,4 +37,18 @@ public class LeadSpecs {
             return cb.equal(phoneJoin.get("number"), p);
         };
     }
+
+    public static Specification<Lead> hasKeyword(String keyword) {
+        return (r,q ,cb) -> {
+            if(keyword == null || keyword.trim().isEmpty()) return null;
+
+            String pattern = "%" + keyword.toLowerCase() + "%";
+
+            return cb.like(r.get("phone").get("number"), pattern);
+        };
+    }
+
+    public static Specification<Lead> isCreatedBy(int userId) {
+        return (r,q ,cb) -> cb.equal(r.get("createdBy").get("id"), userId);
+    }
 }
