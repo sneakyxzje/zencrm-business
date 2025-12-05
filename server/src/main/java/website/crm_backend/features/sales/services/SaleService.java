@@ -51,6 +51,10 @@ public class SaleService {
         LeadStatus oldStatus = lead.getStatus();
         lead.setNote(note);
         
+        if(newStatus == null) {
+            lead.setStatus(LeadStatus.PROCESSING);
+        }
+
         if(newStatus != null && newStatus != oldStatus) {
             lead.setStatus(newStatus);
         }
