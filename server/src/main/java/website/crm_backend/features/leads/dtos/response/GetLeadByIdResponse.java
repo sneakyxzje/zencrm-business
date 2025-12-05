@@ -17,6 +17,7 @@ public record GetLeadByIdResponse(
     String note,
     LocalDateTime createdAt,
     LocalDateTime assignedAt,
-    ProductDetailResponse product
+    ProductDetailResponse product,
+    String status
 ) {
 }
