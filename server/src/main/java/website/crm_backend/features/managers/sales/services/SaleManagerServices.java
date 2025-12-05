@@ -40,7 +40,8 @@ public class SaleManagerServices {
     public Page<LeadListDTO> getAssigmentQueue(
         Set<LeadStatus> statutes,
         Boolean assigned,
-        Pageable pageable
+        Pageable pageable,
+        String search
     ) {
         var me = AuthUtils.getRole();
         Specification<Lead> spec = (root, query, cb) -> cb.conjunction();
@@ -52,6 +53,9 @@ public class SaleManagerServices {
             spec = spec.and(LeadSpecs.createdByTeamType(TeamType.MARKETING));
         }
 
+        if(search != null && !search.isBlank()) {
+            spec = spec.and(LeadSpecs.hasKeyword(search));
+        }
         Page<Lead> page = leadRepo.findAll(spec, pageable);
         return page.map(leadMapper::toListDTO);
     }
