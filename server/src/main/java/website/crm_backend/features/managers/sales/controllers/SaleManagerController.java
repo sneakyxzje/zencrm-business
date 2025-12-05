@@ -30,8 +30,14 @@ public class SaleManagerController {
     
     @GetMapping("/assignment-queue")
     @PreAuthorize("hasRole('SALE_MANAGER')")
-    public ResponseEntity<Page<LeadListDTO>> queue(@RequestParam(name="statuses", required= false) Set<LeadStatus> statuses, @RequestParam(name="statutes", required = false)Boolean assigned, Pageable pageable) {
-        return ResponseEntity.ok(saleManagerServices.getAssigmentQueue(statuses, assigned, pageable));
+    public ResponseEntity<Page<LeadListDTO>> queue(
+        @RequestParam(name="statuses", required= false) Set<LeadStatus> statuses, 
+        @RequestParam(name="statutes", required = false)
+        Boolean assigned,
+        Pageable pageable,
+        @RequestParam(required = false) String search
+    ) {
+        return ResponseEntity.ok(saleManagerServices.getAssigmentQueue(statuses, assigned, pageable, search));
     }    
 
     @PostMapping("/{leadId}/assignment")
