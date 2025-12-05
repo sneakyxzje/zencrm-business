@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import website.crm_backend.domain.models.products.Product;
 import website.crm_backend.domain.models.users.User;
 import website.crm_backend.domain.repositories.PhoneNumberRepository;
 import website.crm_backend.domain.repositories.leads.LeadRepository;
+import website.crm_backend.domain.repositories.leads.specs.LeadSpecs;
 import website.crm_backend.domain.repositories.logs.LeadLogRepository;
 import website.crm_backend.domain.repositories.products.ProductRepository;
 import website.crm_backend.domain.repositories.users.UserRepository;
@@ -52,10 +54,12 @@ public class MarketingService {
         .phone(phone)
         .product(product)
         .address(request.address())
+        .status(LeadStatus.NEW)
         .build();
 
+        User assignee = null;
         if(request.assignee() != null) {
-            User assignee = userRepo.findById(request.assignee())
+            assignee = userRepo.findById(request.assignee())
             .orElseThrow(() -> new IllegalArgumentException("Assignee not found"));
 
             lead.setStatus(LeadStatus.ASSIGNED);
@@ -67,24 +71,36 @@ public class MarketingService {
         }
         Lead savedLead = leadRepo.save(lead);
 
-        LeadLog log = LeadLog.builder()
-        .lead(savedLead)
-        .actor(creator)
-        .action(LogAction.UPLOAD_NEW)
-        .fromStatus(null)
-        .toStatus(lead.getStatus())
-        .createdAt(LocalDateTime.now())
-        .build();
-        leadLogRepo.save(log);
-
+        LeadLog createLog = LeadLog.builder()
+                .lead(savedLead)
+                .actor(creator)
+                .action(LogAction.UPLOAD_NEW)
+                .toStatus(LeadStatus.NEW)   
+                .createdAt(LocalDateTime.now())
+                .build();
+        leadLogRepo.save(createLog);
+        if(request.assignee() != null) {
+            LeadLog assignLog = LeadLog.builder()
+                .lead(savedLead)
+                .actor(creator)
+                .action(LogAction.ASSIGN)
+                .fromStatus(LeadStatus.NEW)
+                .toStatus(LeadStatus.ASSIGNED)
+                .targetUser(assignee)
+                .createdAt(LocalDateTime.now().plusSeconds(1))
+                .build();
+            leadLogRepo.save(assignLog);
+        }
         return leadMapper.toUploadLeadResponse(savedLead);
     }
 
-    public Page<LeadListDTO> getAllLeads(Pageable pageable) {
+    public Page<LeadListDTO> getAllLeads(String search, Pageable pageable) {
         int user = AuthUtils.getUserId();
-        return leadRepo.findByCreatedBy_IdOrderByCreatedAtDesc(user, pageable)
-        .map(leadMapper::toListDTO);
+        Specification<Lead> spec = (root, query, cb) -> cb.conjunction();
+        spec = LeadSpecs.isCreatedBy(user);
+        if(search != null && !search.isBlank()) {
+            spec = spec.and(LeadSpecs.hasKeyword(search));
+        }
+        return leadRepo.findAll(spec, pageable).map(leadMapper::toListDTO);
     }
-
-
 }
