@@ -35,7 +35,7 @@ public class OrderService {
         Lead lead = leadRepo.findById(request.leadId())
         .orElseThrow(() -> new IllegalArgumentException("Lead not found"));
 
-        if (lead.getStatus() == LeadStatus.PENDING) {
+        if (lead.getStatus() == LeadStatus.DELIVERING) {
             throw new RuntimeException("Lead already converted");
         }
 
@@ -54,15 +54,15 @@ public class OrderService {
         .sourceLead(lead)
         .build();
         
-        lead.setStatus(LeadStatus.PENDING);
+        lead.setStatus(LeadStatus.DELIVERING);
         leadRepo.save(lead);
 
         LeadLog leadLog = LeadLog.builder()
         .lead(lead)
-        .action(LogAction.ASSIGN)
+        .action(LogAction.STATUS_CHANGE)
         .actor(sale)
-        .fromStatus(LeadStatus.IN_PROGRESS)
-        .toStatus(LeadStatus.PENDING)
+        .fromStatus(LeadStatus.READY_TO_ORDER)
+        .toStatus(LeadStatus.DELIVERING)
         .build();
         leadLogRepo.save(leadLog);
         orderRepo.save(order);
