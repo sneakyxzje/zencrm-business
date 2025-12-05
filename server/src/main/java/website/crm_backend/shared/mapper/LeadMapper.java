@@ -168,7 +168,8 @@ public class LeadMapper {
             lead.getNote(),
             lead.getCreatedAt(),
             lead.getAssignedAt(),
-            productDTO  
+            productDTO,
+            lead.getStatus().toString()  
         );
     }
 }
