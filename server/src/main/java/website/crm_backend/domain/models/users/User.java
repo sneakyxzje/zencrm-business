@@ -1,5 +1,7 @@
 package website.crm_backend.domain.models.users;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -50,4 +52,7 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     @JoinColumn(name="team_id", foreignKey = @ForeignKey(name="fk_user_team"))
     private Team team;
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 }
