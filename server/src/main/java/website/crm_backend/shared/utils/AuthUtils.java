@@ -1,5 +1,7 @@
 package website.crm_backend.shared.utils;
 
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -29,6 +31,6 @@ public class AuthUtils {
     }
 
     public static String getTeamName() {
-        return getUserDetails().getTeamName();
+        return Optional.ofNullable(getUserDetails().getTeamName()).orElse("N/A");
     }
 }
