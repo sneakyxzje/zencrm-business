@@ -1,6 +1,7 @@
 package website.crm_backend.domain.repositories.leads;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import org.springframework.lang.Nullable;
 
 import website.crm_backend.domain.models.leads.Lead;
 import website.crm_backend.domain.models.leads.enums.LeadStatus;
+import website.crm_backend.domain.repositories.leads.projections.LeadChartData;
+import website.crm_backend.domain.repositories.leads.projections.LeadMoM;
 public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecificationExecutor<Lead>{
     Page<Lead> findByAssigneeIsNullAndStatus(LeadStatus status, Pageable pageable);
     Page<Lead> findByAssignee_IdAndStatusIn(int assigneeUserId, Collection<LeadStatus> statutes, Pageable pageable);
@@ -52,4 +55,23 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>, JpaSpecifi
 
     @Query("SELECT l FROM Lead l WHERE l.phone.number LIKE CONCAT('%', :search, '%')")
     Page<Lead> findBySearch(@Param("search") String search, Pageable pageable);
+
+    @Query(
+        value = "SELECT " +
+        " COUNT(CASE WHEN DATE_TRUNC('month', l.created_at) = DATE_TRUNC('month', CURRENT_TIMESTAMP) THEN 1 END) as currentCount, "
+        + " COUNT(CASE WHEN DATE_TRUNC('month', l.created_at) = DATE_TRUNC('month', CURRENT_TIMESTAMP - INTERVAL '1 MONTH') THEN 1 END) as previousCount "
+        + " from lead l", nativeQuery = true
+    )
+    LeadMoM getLeadMoMStats();
+
+    @Query (
+        value="""
+            SELECT TO_CHAR(created_at, 'MM/YYYY') as timePoint,
+            COUNT(id) as value
+            FROM lead WHERE created_at >= CURRENT_DATE - INTERVAL '6 months'
+            GROUP BY TO_CHAR(created_at, 'MM/YYYY')
+            ORDER BY MIN(created_at) ASC 
+        """, nativeQuery = true
+    )
+    List<LeadChartData> getLeadGrowthData();
 }
