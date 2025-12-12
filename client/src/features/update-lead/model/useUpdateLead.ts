@@ -1,32 +1,43 @@
+import { useToast } from "@app/provider/ToastContext";
 import { updateLead } from "@entities/lead/api";
 import { useState } from "react";
 export function useUpdateLead() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const { addToast } = useToast();
   async function submit(payload: {
     leadId: number;
     note: string;
-    status: string;
+    status: string | null;
   }) {
     const { leadId, note, status } = payload;
     if (!note.trim()) {
-      setError("Note không được để trống");
+      addToast({
+        type: "error",
+        title: "Error",
+        message: "Note không được để trống",
+        persistent: false,
+        duration: 4000,
+      });
       return false;
     }
 
-    setError(null);
     setLoading(true);
     try {
       await updateLead({ leadId, note: note.trim(), status });
       return true;
     } catch (e: any) {
-      setError(e?.message ?? "Update thất bại");
+      addToast({
+        type: "error",
+        title: "Error",
+        message: "Upload thất bại, có lỗi từ server!",
+        persistent: false,
+        duration: 4000,
+      });
       return false;
     } finally {
       setLoading(false);
     }
   }
 
-  return { submit, loading, error };
+  return { submit, loading };
 }
