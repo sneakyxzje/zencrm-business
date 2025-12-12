@@ -1,7 +1,5 @@
 import { findLead } from "@entities/lead/api";
 import type { LeadItem } from "@entities/lead/model/types";
-import { menuByRole } from "@widgets/sidebar/model/items";
-import Sidebar from "@widgets/sidebar/ui/sidebar";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 export const CreateOrder = () => {
   const [lead, setLead] = useState<LeadItem[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -17,7 +14,7 @@ export const CreateOrder = () => {
     const fetch = async () => {
       setLoading(true);
       try {
-        const ok = await findLead({ status: "IN_PROGRESS" });
+        const ok = await findLead({ status: "READY_TO_ORDER" });
         if (ok) {
           setLead(ok.content);
         } else {
@@ -51,13 +48,9 @@ export const CreateOrder = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-[#1e2023] z-50 overflow-hidden flex"
+      className=" bg-[#1e2023] z-50 overflow-hidden flex"
     >
-      <Sidebar sideBarItems={menuByRole.ROLE_SALE} />
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header Section */}
         <div className="bg-gradient-to-r from-[#2a2c2e] to-[#323437] border-b border-[#3f4245] px-8 py-6 shadow-xl">
           <motion.div
             initial={{ y: -20, opacity: 0 }}
@@ -91,7 +84,6 @@ export const CreateOrder = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex items-center space-x-4">
               <motion.button
                 whileHover={{ scale: selectedCount > 0 ? 1.05 : 1 }}
@@ -130,7 +122,6 @@ export const CreateOrder = () => {
           </motion.div>
         </div>
 
-        {/* Stats Section */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -188,10 +179,8 @@ export const CreateOrder = () => {
           </div>
         </motion.div>
 
-        {/* Main Content Area */}
         <div className="flex-1 overflow-hidden bg-[#1e2023] p-8">
           <div className="grid grid-cols-12 gap-8 h-full">
-            {/* Leads List Section - 8 columns */}
             <div className="col-span-8 flex flex-col">
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
@@ -199,7 +188,6 @@ export const CreateOrder = () => {
                 transition={{ delay: 0.3 }}
                 className="bg-gradient-to-br from-[#2a2c2e] to-[#252729] rounded-2xl border border-[#3f4245] shadow-2xl h-full flex flex-col overflow-hidden"
               >
-                {/* Leads Header */}
                 <div className="bg-gradient-to-r from-[#323437] to-[#2a2c2e] px-6 py-5 border-b border-[#3f4245]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
@@ -265,7 +253,6 @@ export const CreateOrder = () => {
                   </div>
                 </div>
 
-                {/* Leads Content */}
                 <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                   {loading ? (
                     <div className="flex items-center justify-center h-full">
@@ -319,7 +306,7 @@ export const CreateOrder = () => {
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: index * 0.05 }}
                             onClick={() => {
-                              if (isDisabled) return; // chặn click nếu đã có lựa chọn khác
+                              if (isDisabled) return;
                               toggleLeadSelection(idStr);
                             }}
                             aria-disabled={isDisabled}
@@ -331,7 +318,6 @@ export const CreateOrder = () => {
                                 : "hover:scale-[1.01] cursor-pointer"
                             }`}
                           >
-                            {/* Selection Overlay */}
                             <div
                               className={`absolute inset-0 rounded-2xl transition-all duration-300 ${
                                 isSelected
@@ -340,7 +326,6 @@ export const CreateOrder = () => {
                               }`}
                             ></div>
 
-                            {/* Lead Card */}
                             <div
                               className={`relative bg-[#323437] rounded-xl p-4 border transition-all duration-300 ${
                                 isSelected
@@ -349,7 +334,6 @@ export const CreateOrder = () => {
                               }`}
                             >
                               <div className="flex items-center justify-between">
-                                {/* Lead Info */}
                                 <div className="flex-1 grid grid-cols-4 gap-4 items-center">
                                   <div className="flex items-center space-x-2">
                                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
@@ -402,11 +386,10 @@ export const CreateOrder = () => {
                                   </div>
                                 </div>
 
-                                {/* Right Side - Status & Checkbox */}
                                 <div className="flex items-center space-x-3 ml-4">
                                   <div
                                     className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                      l.status === "IN_PROGRESS"
+                                      l.status === "READY_TO_ORDER"
                                         ? "bg-amber-500/20 text-amber-400"
                                         : "bg-gray-500/20 text-gray-400"
                                     }`}
@@ -451,9 +434,7 @@ export const CreateOrder = () => {
               </motion.div>
             </div>
 
-            {/* Quick Actions Panel - 4 columns */}
             <div className="col-span-4 space-y-6">
-              {/* Quick Actions Card */}
               <motion.div
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
@@ -517,7 +498,6 @@ export const CreateOrder = () => {
                 </div>
               </motion.div>
 
-              {/* Selection Summary */}
               <motion.div
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
