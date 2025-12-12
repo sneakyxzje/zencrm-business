@@ -1,12 +1,12 @@
 import { api } from "@shared/api/axios";
 
-export const getLog = async (leadId: number) => {
+export const getLog = async (leadId: number, page = 0, size = 10) => {
+  const url = `/api/leads/${leadId}/logs`;
   const params = {
-    page: 0,
-    size: 20,
+    page,
+    size,
     sort: "createdAt,asc",
   };
-  const url = `/api/leads/${leadId}/logs`;
   const res = await api.get(url, { params });
   return res.data;
 };
