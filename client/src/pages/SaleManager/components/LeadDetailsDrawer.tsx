@@ -2,7 +2,7 @@ import type { Lead } from "@entities/lead/model/types";
 import { time } from "@shared/lib/time";
 import { normalize } from "@shared/lib/normalize";
 import { assignLead } from "@features/assign-lead/model/service";
-import StatusBadge from "@entities/lead/ui/StatusBadge";
+import StatusBadge from "@shared/ui/StatusBadge";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { AssignableSales } from "@entities/user/model/types";
 
