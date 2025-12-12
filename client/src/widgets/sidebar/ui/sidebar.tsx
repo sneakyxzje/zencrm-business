@@ -117,7 +117,6 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
         isCollapsed ? "w-16" : "w-72"
       }`}
     >
-      {/* Top brand */}
       <div className="relative p-4 border-b border-[#3f4245]">
         <div className="flex items-center justify-between">
           {!isCollapsed && (
@@ -126,18 +125,8 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center gap-3"
             >
-              <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[#f48024] to-[#ff8a00] shadow-[0_10px_30px_rgba(244,128,36,0.35)]">
-                <svg
-                  className="w-5 h-5 text-white"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z" />
-                </svg>
-              </div>
               <div>
                 <h2 className="text-lg font-bold text-[#dcdcdc]">ZenCRM</h2>
-                <p className="text-[11px] text-[#a7b0b1]">Enterprise</p>
               </div>
             </motion.div>
           )}
@@ -272,9 +261,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sideBarItems }) => {
               <span>JD</span>
             ) : (
               <>
-                <div className="w-8 h-8 bg-gradient-to-br from-[#f48024] to-[#e06a00] rounded-full grid place-items-center text-white text-xs font-semibold">
-                  JD
-                </div>
+                <div className="w-8 h-8 bg-gradient-to-br from-[#f48024] to-[#e06a00] rounded-full grid place-items-center text-white text-xs font-semibold"></div>
                 <div className="ml-3 flex-1 min-w-0">
                   <p className="text-sm font-medium text-[#dcdcdc] truncate">
                     {auth.user?.username}
