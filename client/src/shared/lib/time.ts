@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 export const time = (t: string | null): string | undefined => {
-  return t ? dayjs(t).format("DD/MM/YYYY HH:mm") : undefined;
+  return t ? dayjs(t).format("DD/MM/YYYY HH:mm:s") : undefined;
 };
 
 export const formatDate = (dateString: string) => {
