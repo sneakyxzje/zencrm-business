@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -25,6 +26,7 @@ import website.crm_backend.domain.repositories.users.UserRepository;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.marketings.dtos.request.UploadLeadRequest;
 import website.crm_backend.features.marketings.dtos.response.UploadLeadResponse;
+import website.crm_backend.shared.dto.SocketEvent;
 import website.crm_backend.shared.mapper.LeadMapper;
 import website.crm_backend.shared.utils.AuthUtils;
 import website.crm_backend.shared.utils.PhoneNumberUtils;
@@ -39,7 +41,7 @@ public class MarketingService {
     private final LeadLogRepository leadLogRepo;
     private final LeadMapper leadMapper;
     private final ProductRepository productRepo;
-
+    private final SimpMessagingTemplate messagingTemplate;
     @Transactional
     public UploadLeadResponse uploadLead(UploadLeadRequest request) {
         var creator = userRepo.getReferenceById(AuthUtils.getUserId());
@@ -91,6 +93,8 @@ public class MarketingService {
                 .build();
             leadLogRepo.save(assignLog);
         }
+        messagingTemplate.convertAndSend("/topic/roles/ROLE_SALE_MANAGER", new SocketEvent<>("LEAD_CREATED", "Có lead mới vừa được tạo", savedLead.getId()));
+
         return leadMapper.toUploadLeadResponse(savedLead);
     }
 
