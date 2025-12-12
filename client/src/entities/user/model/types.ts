@@ -17,3 +17,14 @@ export type User = {
   username: string;
   teamName: string;
 };
+
+export interface UserMetricsResponse {
+  currentCount: number;
+  previousCount: number;
+  percentChange: number;
+}
+
+export interface UserGrowthData {
+  timePoint: string;
+  value: number;
+}
