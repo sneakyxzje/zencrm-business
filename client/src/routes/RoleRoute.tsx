@@ -8,6 +8,7 @@ type Role =
   | "ROLE_MARKETING"
   | "ROLE_MARKETING_MANAGER"
   | "ROLE_SALE"
+  | "ROLE_WAREHOUSE"
   | "ROLE_SALE_MANAGER";
 
 export default function RoleRoute({
