@@ -1,18 +1,20 @@
 export const ActionDisplay = (act: string) => {
   switch (act) {
     case "UPLOAD_NEW":
-      return "created";
+      return "đã tạo";
     case "NEW":
       return "new lead";
     case "ASSIGNED":
-      return "assigned";
+      return "CHĂM SÓC";
     case "ASSIGN":
-      return "assigned";
+      return "đã gán";
     case "STATUS_CHANGE":
-      return "change status";
-    case "IN_PROGRESS":
-      return "in progress";
+      return "đã cập nhật";
+    case "READY_TO_ORDER":
+      return "CHỐT ĐƠN";
     case "CALLED":
-      return "called";
+      return "ĐÃ GỌI";
+    case "DELIVERING":
+      return "Đang giao hàng";
   }
 };
