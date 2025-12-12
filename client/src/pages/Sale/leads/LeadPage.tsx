@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
 import { time } from "@shared/lib/time";
-import Sidebar from "@widgets/sidebar/ui/sidebar";
-import { menuByRole } from "@widgets/sidebar/model/items";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import type { LeadDetails } from "@entities/lead/model/types";
-import { getleadDetails } from "@entities/lead/api";
+import type { LeadDetails, LeadStatus } from "@entities/lead/model/types";
+import { getLeadDetails } from "@entities/lead/api";
 import { LogComponent } from "@shared/ui/logs/log";
 import { getLog } from "@entities/log/api";
 import type { LogType } from "@entities/log/model/types";
@@ -15,6 +13,8 @@ export const LeadDetailsPage = () => {
   const { leadId } = useParams<{ leadId: string }>();
   const [leadDetails, setLeadDetails] = useState<LeadDetails | null>(null);
   const [logs, setLogs] = useState<LogType[] | null>(null);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     const fetch = async () => {
@@ -22,11 +22,13 @@ export const LeadDetailsPage = () => {
         try {
           const numericLeadId = parseInt(leadId);
           const [detailsResponse, logResponse] = await Promise.all([
-            getleadDetails(numericLeadId),
+            getLeadDetails(numericLeadId),
             getLog(numericLeadId),
           ]);
           setLeadDetails(detailsResponse);
           setLogs(logResponse.content);
+          setTotalPages(logResponse.totalPages);
+          console.log(totalPages);
         } catch (error) {
           console.error(error);
         }
@@ -47,7 +49,7 @@ export const LeadDetailsPage = () => {
 
   if (!leadDetails) {
     return (
-      <div className="fixed inset-0 bg-[#1e2023] flex items-center justify-center">
+      <div className="bg-[#1e2023] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#4a9eff] mx-auto mb-4"></div>
           <p className="text-[#90999a]">Loading lead details...</p>
@@ -62,10 +64,8 @@ export const LeadDetailsPage = () => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
-      className="fixed inset-0 bg-[#1e2023] z-50 overflow-hidden flex"
+      className="bg-[#1e2023] z-50 overflow-hidden flex"
     >
-      <Sidebar sideBarItems={menuByRole.ROLE_SALE} />
-
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
         <motion.div
@@ -126,11 +126,9 @@ export const LeadDetailsPage = () => {
           </div>
         </motion.div>
 
-        {/* Main Content */}
         <div className="flex-1 overflow-y-auto p-4 bg-gradient-to-br from-[#1e2023] to-[#252830]">
-          <div className="grid grid-cols-3 gap-4 h-full max-w-6xl mx-auto">
-            <div className="col-span-2 space-y-4">
-              {/* Customer Information Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full max-w-[1600px] mx-auto">
+            <div className="col-span-6 space-y-4">
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -165,7 +163,10 @@ export const LeadDetailsPage = () => {
                       },
                       { label: "Customer", value: leadDetails.customerName },
                       { label: "Phone", value: leadDetails.phoneNumber },
-                      { label: "Product", value: leadDetails.productName },
+                      {
+                        label: "Product",
+                        value: leadDetails.product?.productName,
+                      },
                     ].map((item, index) => (
                       <motion.div
                         key={index}
@@ -216,7 +217,6 @@ export const LeadDetailsPage = () => {
                 </div>
               </motion.div>
 
-              {/* Action Form Card */}
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -243,7 +243,6 @@ export const LeadDetailsPage = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Sales Rep Info */}
                   <div className="p-3 bg-[#1e2023]/50 rounded-lg border border-[#3f4245]/50">
                     <div className="flex items-center">
                       <span className="text-[#90999a] font-medium mr-2 text-sm">
@@ -256,14 +255,50 @@ export const LeadDetailsPage = () => {
                       </span>
                     </div>
                   </div>
-
-                  <UpdateLeadForm leadId={leadDetails.id} />
+                  <UpdateLeadForm
+                    leadId={leadDetails.id}
+                    status={leadDetails.status as LeadStatus}
+                  />
                 </div>
               </motion.div>
             </div>
 
-            <div className="col-span-1">
-              <LogComponent logs={logs} leadId={leadId} />
+            <div className="col-span-1 lg:col-span-5 h-full">
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="bg-[#2a2c2e] rounded-xl border border-[#3f4245] overflow-hidden h-full flex flex-col"
+              >
+                <div className="px-5 py-4 border-b border-[#3f4245] bg-[#25272a] flex items-center gap-3">
+                  <svg
+                    className="w-5 h-5 text-[#dcdcdc]"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <h2 className="text-base font-semibold text-[#dcdcdc]">
+                    Lịch sử hoạt động
+                  </h2>
+                </div>
+
+                <div className="flex-1 overflow-y-auto p-5 custom-scrollbar">
+                  <LogComponent
+                    logs={logs}
+                    leadId={leadId}
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChanges={(p) => setPage(p)}
+                  />
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
