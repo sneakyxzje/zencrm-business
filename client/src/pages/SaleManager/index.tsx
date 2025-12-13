@@ -54,7 +54,6 @@ export default function SaleManager() {
           />
         </section>
       </main>
-
       <LeadDetailsDrawer
         open={showDetails}
         lead={selectedLead}
