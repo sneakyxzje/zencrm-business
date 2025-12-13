@@ -64,9 +64,9 @@ export const SearchPopup = ({
                     </svg>
                   </div>
                   <div>
-                    <h2 className="text-xl font-bold">Tra cứu nâng cao</h2>
+                    <h2 className="text-xl font-bold">Tra cứu</h2>
                     <p className="text-[#a8aaac] text-sm mt-1">
-                      Tìm kiếm thông tin lead một cách nhanh chóng
+                      Tìm kiếm thông tin
                     </p>
                   </div>
                 </div>
