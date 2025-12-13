@@ -7,7 +7,10 @@ import {
   type LeadStatus,
   type LeadUploadRequest,
   type UploadResponse,
+  type AssignLeadPayload,
+  type AssignLeadResponse,
 } from "@entities/lead/model/types";
+
 import {
   type UpdateLeadResponse,
   type UpdateLeadPayLoad,
@@ -112,5 +115,11 @@ export async function getLeadGrowth() {
   const { data } = await api.get<LeadGrowthResponse[]>(
     "/api/metrics/lead-growth"
   );
+  return data;
+}
+
+export async function assignLead({ leadId, saleId }: AssignLeadPayload) {
+  const url = `/api/sale/leads/${leadId}/assignment`;
+  const { data } = await api.post<AssignLeadResponse>(url, { saleId });
   return data;
 }
