@@ -22,6 +22,7 @@ import website.crm_backend.domain.repositories.leads.LeadRepository;
 import website.crm_backend.domain.repositories.leads.specs.LeadSpecs;
 import website.crm_backend.domain.repositories.logs.LeadLogRepository;
 import website.crm_backend.domain.repositories.users.UserRepository;
+import website.crm_backend.exception.BusinessException;
 import website.crm_backend.features.leads.dtos.shared.LeadListDTO;
 import website.crm_backend.features.managers.sales.dtos.request.AssignLeadRequest;
 import website.crm_backend.features.managers.sales.dtos.response.AssignLeadResponse;
@@ -36,6 +37,7 @@ public class SaleManagerServices {
     private final UserRepository userRepo;
     private final LeadLogRepository leadLogRepo;
     private final LeadAssignmentRepository leadAssignRepo;
+
     @Transactional
     public Page<LeadListDTO> getAssigmentQueue(
         Set<LeadStatus> statutes,
@@ -72,7 +74,11 @@ public class SaleManagerServices {
             throw new IllegalArgumentException("saleId are required");
         }
 
-
+        if(lead.getStatus() == LeadStatus.PROCESSING || lead.getStatus() == LeadStatus.DELIVERING || lead.getStatus() == LeadStatus.WIN
+        || lead.getStatus() == LeadStatus.READY_TO_ORDER || lead.getStatus() == LeadStatus.CLOSED
+        ) {
+            throw new BusinessException("Không thể gán vì Lead này đang được xử lý!");
+        }
         User assignee = userRepo.findById(saleId)
         .orElseThrow(() -> new IllegalArgumentException("Assignee not found"));
         lead.setAssignee(assignee);
