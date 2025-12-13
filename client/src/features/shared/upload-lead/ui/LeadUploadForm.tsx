@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
 import { useLeadUpload } from "../model/useLeadUpload";
-import { useToast } from "@app/provider/ToastContext";
-import { useNavigate } from "react-router-dom";
 import type { AssignableSales } from "@entities/user/model/types";
 import type { GetAllProduct } from "@entities/product/model/type";
 import { AutocompleteInput } from "@shared/ui/AutoCompleteInput";
@@ -21,47 +19,16 @@ export default function LeadUploadForm({
   currentTeamName,
   currentSaleInfo,
   currentProductInfo,
-  // defaultAssigneeId,
   defaultProductId,
 }: Props) {
-  const {
-    customerName,
-    setCustomerName,
-    phoneNumber,
-    setPhoneNumber,
-    productId,
-    setProductId,
-    assignee,
-    setAssignee,
-    address,
-    setAddress,
-    teamName,
-    loading,
-    error,
-    submit,
-  } = useLeadUpload({
-    teamName: currentTeamName ?? "",
-    defaultProductId: defaultProductId,
-    defaultAssigneeId: null,
-  });
+  const { setters, formState, teamName, loading, error, submit } =
+    useLeadUpload({
+      teamName: currentTeamName ?? "",
+      defaultProductId: defaultProductId,
+      defaultAssigneeId: null,
+    });
   const selectedAssignee =
-    currentSaleInfo?.find((s) => s.id === assignee) || null;
-  const { addToast } = useToast();
-  const navigate = useNavigate();
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const ok = await submit();
-    if (ok) {
-      addToast({
-        type: "success",
-        title: "Successful",
-        message: "Upload successfully",
-        persistent: false,
-        duration: 4000,
-      });
-      navigate("/customers");
-    }
-  }
+    currentSaleInfo?.find((s) => s.id === formState.assignee) || null;
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -84,7 +51,7 @@ export default function LeadUploadForm({
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-6">
+        <form onSubmit={submit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
@@ -116,8 +83,8 @@ export default function LeadUploadForm({
               </label>
               <input
                 type="text"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
+                value={formState.customerName}
+                onChange={(e) => setters.setCustomerName(e.target.value)}
                 className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none"
               />
             </div>
@@ -127,8 +94,8 @@ export default function LeadUploadForm({
               </label>
               <input
                 type="tel"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                value={formState.phoneNumber}
+                onChange={(e) => setters.setPhoneNumber(e.target.value)}
                 placeholder="+84 901 234 567"
                 className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] placeholder-[#90999a] focus:outline-none"
               />
@@ -140,10 +107,10 @@ export default function LeadUploadForm({
               Sản phẩm *
             </label>
             <select
-              value={productId ?? ""}
+              value={formState.productId ?? ""}
               onChange={(e) =>
-                setProductId(
-                  e.target.value ? parseInt(e.target.value, 10) : null
+                setters.setProductId(
+                  e.target.value ? parseInt(e.target.value, 10) : 0
                 )
               }
               className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] focus:outline-none"
@@ -165,7 +132,7 @@ export default function LeadUploadForm({
                 placeholder="Nhập tên Sale hoặc tên Team..."
                 items={currentSaleInfo || []}
                 selectedItem={selectedAssignee}
-                onSelect={(sale) => setAssignee(sale?.id || null)}
+                onSelect={(sale) => setters.setAssignee(sale?.id || null)}
                 displayValue={(sale) => `${sale.fullname} - ${sale.teamName}`}
                 filterFn={(sale, query) => {
                   const textToCheck =
@@ -176,31 +143,28 @@ export default function LeadUploadForm({
             </div>
           </div>
 
-          {/* Địa chỉ */}
           <div>
             <label className="block text-sm font-medium text-[#dcdcdc] mb-2">
               Địa chỉ
             </label>
             <textarea
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
+              value={formState.address}
+              onChange={(e) => setters.setAddress(e.target.value)}
               placeholder="Số 123, Phố ABC, Quận XYZ, TP..."
               rows={3}
               className="w-full px-4 py-3 bg-[#2d2d2d] border border-[#4d4d4d] rounded-xl text-[#dcdcdc] placeholder-[#90999a] focus:outline-none resize-none"
             />
           </div>
 
-          {/* Error */}
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
-          {/* Actions */}
           <div className="flex gap-4 pt-2">
             <button
               type="button"
               onClick={() => {
-                setCustomerName("");
-                setPhoneNumber("");
-                setAddress("");
+                setters.setCustomerName("");
+                setters.setPhoneNumber("");
+                setters.setAddress("");
               }}
               className="flex-1 py-3 rounded-xl font-semibold text-[#dcdcdc] bg-[#2d2d2d] border border-[#4d4d4d] hover:bg-[#3b3f41] transition"
             >
@@ -215,24 +179,6 @@ export default function LeadUploadForm({
             >
               {loading ? "Đang up..." : "Upload"}
             </motion.button>
-          </div>
-
-          {/* Badge */}
-          <div className="flex items-center justify-center mt-6 text-xs text-[#90999a]">
-            <svg
-              className="w-4 h-4 mr-1"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
-            </svg>
-            Dữ liệu được bảo mật 256-bit SSL
           </div>
         </form>
       </div>
