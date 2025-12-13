@@ -1,17 +1,16 @@
 import type { Lead } from "@entities/lead/model/types";
 import { time } from "@shared/lib/time";
-import { normalize } from "@shared/lib/normalize";
-import { assignLead } from "@features/assign-lead/model/service";
 import StatusBadge from "@shared/ui/StatusBadge";
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import type { AssignableSales } from "@entities/user/model/types";
+import { useAssignLead } from "@features/assign-lead/model/useAssignLead";
+import { AutocompleteInput } from "@shared/ui/AutoCompleteInput";
 
 export default function LeadDetailsDrawer({
   open,
   lead,
   onClose,
   sales,
-  onAssigned,
 }: {
   open: boolean;
   lead: Lead | null;
@@ -19,26 +18,19 @@ export default function LeadDetailsDrawer({
   onClose: () => void;
   onAssigned?: () => void;
 }) {
-  const [q, setQ] = useState("");
-  const [team, setTeam] = useState("");
   const [saleId, setSaleId] = useState<number | null>(null);
-  const [openList, setOpenList] = useState(false);
   const boxRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const f = (e: MouseEvent) => {
-      if (!boxRef.current?.contains(e.target as Node)) setOpenList(false);
-    };
-    document.addEventListener("mousedown", f);
-    return () => document.removeEventListener("mousedown", f);
-  }, []);
-  const filtered = useMemo(() => {
-    const nq = normalize(q);
-    return nq ? sales.filter((s) => normalize(s.fullname).includes(nq)) : sales;
-  }, [q, sales]);
-
+  const selectedAssignee = sales?.find((s) => s.id === saleId) || null;
+  const { mutate, isPending } = useAssignLead();
   if (!open || !lead) return null;
   const isValid = saleId !== null;
-
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    mutate({
+      leadId: lead.id,
+      saleId: saleId as number,
+    });
+  };
   return (
     <>
       <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
@@ -61,17 +53,7 @@ export default function LeadDetailsDrawer({
           </button>
         </div>
 
-        <form
-          className="p-6 flex-1 overflow-y-auto"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            console.log(lead.id);
-            if (!isValid) return alert("Id sale k duoc null");
-            await assignLead({ leadId: lead.id, saleId: saleId });
-            onAssigned?.();
-            onClose();
-          }}
-        >
+        <form className="p-6 flex-1 overflow-y-auto" onSubmit={handleSubmit}>
           <div className="mb-6">
             <h3 className="text-2xl font-bold text-white">
               {lead.customerName || "Chưa có tên"}
@@ -122,59 +104,24 @@ export default function LeadDetailsDrawer({
               Phân công Sale
             </h4>
             <div className="grid grid-cols-1 gap-4">
-              <div className="relative" ref={boxRef}>
-                <label className="block text-sm font-medium text-[#dcdcdc]">
-                  Sale phụ trách
-                </label>
-                <input
-                  type="text"
-                  placeholder="Tìm kiếm sale..."
-                  value={q}
-                  onFocus={() => setOpenList(true)}
-                  onChange={(e) => setQ(e.target.value)}
-                  className="mt-1 w-full px-3 py-2 border border-[#3f4245] rounded-md bg-[#27292b] text-[#dcdcdc] placeholder-[#90999a] focus:outline-none focus:ring-2 focus:ring-[#f48024] focus:border-[#f48024]"
-                />
-                {openList && (
-                  <ul className="absolute z-50 mt-1 w-full bg-[#1c1f22] border border-[#3f4245] rounded-md shadow-xl max-h-56 overflow-auto">
-                    {filtered.length ? (
-                      filtered.map((s) => (
-                        <li
-                          key={s.id}
-                          className="cursor-pointer text-[#dcdcdc] hover:bg-[#25292c] py-2 px-4"
-                          onClick={() => {
-                            setQ(s.fullname);
-                            setTeam(s.teamName);
-                            setOpenList(false);
-                            setSaleId(s.id);
-                          }}
-                        >
-                          {s.fullname}{" "}
-                          <span className="text-[#9aa0a6]">({s.teamName})</span>
-                        </li>
-                      ))
-                    ) : (
-                      <li className="text-[#9aa0a6] py-2 px-4">
-                        {q ? "Không tìm thấy sale" : "Nhập để tìm kiếm sale"}
-                      </li>
-                    )}
-                  </ul>
-                )}
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-[#dcdcdc]">
-                  Team
-                </label>
-                <input
-                  value={team}
-                  disabled
-                  placeholder="Team"
-                  className="mt-1 w-full px-3 py-2 border border-[#3f4245] rounded-md bg-[#27292b] text-[#9aa0a6] sm:text-sm"
-                />
-              </div>
+              <div className="relative" ref={boxRef}></div>
+              <AutocompleteInput
+                placeholder="Nhập tên Sale hoặc tên Team..."
+                items={sales}
+                selectedItem={selectedAssignee}
+                onSelect={(sale) => setSaleId(sale?.id || null)}
+                displayValue={(sale) => `${sale.fullname} - ${sale.teamName}`}
+                filterFn={(sale, query) => {
+                  const textToCheck =
+                    `${sale.fullname} ${sale.teamName}`.toLowerCase();
+                  return textToCheck.includes(query.toLowerCase());
+                }}
+              />
+
               <div className="mt-6">
                 <button
                   type="submit"
-                  disabled={!isValid}
+                  disabled={isPending || !isValid}
                   className="w-full py-3 rounded-lg text-base font-semibold text-white bg-[#f48024] hover:brightness-110 focus:ring-2 focus:ring-[#f48024] transition shadow-md disabled:opacity-50"
                 >
                   Gán
