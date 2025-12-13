@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { uploadLead } from "@entities/lead/api";
 import type { LeadUploadRequest } from "@entities/lead/model/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@app/provider/ToastContext";
 
 export function useLeadUpload(defaults?: {
   teamName?: string | null;
@@ -9,74 +11,92 @@ export function useLeadUpload(defaults?: {
 }) {
   const [customerName, setCustomerName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [productId, setProductId] = useState<number | null>(
-    defaults?.defaultProductId ?? null
+  const [productId, setProductId] = useState<number>(
+    defaults?.defaultProductId || 0
   );
   const [assignee, setAssignee] = useState<number | null>(
     defaults?.defaultAssigneeId ?? null
   );
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
   const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast();
+  const mutation = useMutation({
+    mutationFn: (data: LeadUploadRequest) => uploadLead(data),
+    onSuccess: () => {
+      addToast({
+        type: "success",
+        title: "Successful",
+        message: "Tạo lead thành công",
+        persistent: false,
+        duration: 4000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+    onError: (err: any) => {
+      const message = err?.response?.data?.message || "Đã có lỗi xảy ra";
+      addToast({
+        type: "success",
+        title: "Successful",
+        message: message,
+        persistent: false,
+        duration: 4000,
+      });
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+    },
+  });
 
-  useEffect(() => {
-    if (productId === null && defaults?.defaultProductId) {
-      setProductId(defaults.defaultProductId);
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setValidationError(null);
+    const cleanPhone = phoneNumber.replace(/\D/g, "");
+    if (!cleanPhone) {
+      setValidationError("Không được để trống số điện thoại");
+      return;
     }
-    if (assignee === null && defaults?.defaultAssigneeId) {
-      setAssignee(defaults.defaultAssigneeId);
+    const vnPhoneRegex = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
+    if (!vnPhoneRegex.test(cleanPhone)) {
+      setValidationError("Số điện thoại không đúng định dạng");
+      return;
     }
-  }, [defaults?.defaultProductId, defaults?.defaultAssigneeId]);
-  async function submit(): Promise<boolean> {
-    setError(null);
-
+    if (!customerName.trim()) {
+      setValidationError("Không được để trống tên khách hàng");
+      return;
+    }
     if (!phoneNumber.trim()) {
-      setError("Vui lòng nhập số điện thoại");
-      return false;
+      setValidationError("Không được để trống số điện thoại");
+      return;
     }
-    if (productId === null) {
-      setError("Vui lòng chọn sản phẩm");
-      return false;
-    }
-
-    setLoading(true);
-    try {
-      const payload: LeadUploadRequest = {
-        customerName: customerName,
-        phoneNumber: phoneNumber,
-        productId: productId,
-        assignee: assignee,
-        address: address || null,
-      };
-      await uploadLead(payload);
-      setCustomerName("");
-      setPhoneNumber("");
-      setProductId(null);
-      setAssignee(null);
-      setAddress("");
-      return true;
-    } catch (e: any) {
-      setError(e?.message ?? "Upload thất bại");
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  }
+    mutation.mutate({
+      customerName,
+      phoneNumber: cleanPhone,
+      productId,
+      assignee,
+      address: address || null,
+    });
+  };
 
   return {
-    customerName,
-    setCustomerName,
-    phoneNumber,
-    setPhoneNumber,
-    productId,
-    setProductId,
-    assignee,
-    setAssignee,
-    address,
-    setAddress,
-    loading,
-    error,
-    submit,
+    formState: {
+      customerName,
+      phoneNumber,
+      productId,
+      assignee,
+      address,
+    },
+    setters: {
+      setCustomerName,
+      setPhoneNumber,
+      setProductId,
+      setAssignee,
+      setAddress,
+    },
     teamName: defaults?.teamName ?? "",
+
+    loading: mutation.isPending,
+    error:
+      validationError ||
+      (mutation.error ? (mutation.error as any).message : null),
+    submit,
   };
 }
