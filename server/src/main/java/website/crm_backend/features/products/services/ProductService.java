@@ -1,7 +1,6 @@
 package website.crm_backend.features.products.services;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.springframework.data.domain.Page;
@@ -24,7 +23,6 @@ import website.crm_backend.features.products.dtos.request.CreateProductRequest;
 import website.crm_backend.features.products.dtos.response.CreateProductResponse;
 import website.crm_backend.features.products.dtos.response.GetAllProductResponse;
 import website.crm_backend.shared.mapper.ProductMapper;
-
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -40,7 +38,6 @@ public class ProductService {
             categoryRepo.findAllById(request.categoryId())
             );
         }
-
         Product product = Product.builder()
         .productName(request.productName())
         .price(request.price())
