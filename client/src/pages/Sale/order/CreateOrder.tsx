@@ -43,43 +43,17 @@ export const CreateOrder = () => {
   const selectedCount = selectedLeadId ? 1 : 0;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
-      className=" bg-[#1e2023] z-50 overflow-hidden flex"
-    >
+    <motion.div className=" z-50 overflow-hidden flex">
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="bg-gradient-to-r from-[#2a2c2e] to-[#323437] border-b border-[#3f4245] px-8 py-6 shadow-xl">
-          <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="flex items-center justify-between"
-          >
+          <motion.div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
-              <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-4 rounded-2xl shadow-lg">
-                <svg
-                  className="w-8 h-8 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"
-                  />
-                </svg>
-              </div>
               <div>
                 <h1 className="text-3xl font-bold text-[#dcdcdc] tracking-tight">
-                  Create New Order
+                  Tạo đơn hàng mới
                 </h1>
                 <p className="text-[#90999a] mt-2 text-lg">
-                  Create and management lead in progress
+                  Xử lý những đơn hàng đã được đánh dấu
                 </p>
               </div>
             </div>
@@ -98,36 +72,11 @@ export const CreateOrder = () => {
               >
                 Create Orders ({selectedCount})
               </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-6 py-4 rounded-xl bg-[#323437] border border-[#3f4245] text-[#90999a] hover:text-[#dcdcdc] hover:border-blue-500/30 transition-all duration-300"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-              </motion.button>
             </div>
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="bg-[#2a2c2e] border-b border-[#3f4245] px-8 py-6"
-        >
+        <motion.div className="bg-[#2a2c2e] border-b border-[#3f4245] px-8 py-6">
           <div className="grid grid-cols-4 gap-6">
             <div className="bg-gradient-to-br from-blue-500/10 to-purple-600/10 rounded-xl p-4 border border-blue-500/20">
               <div className="flex items-center space-x-3">
@@ -179,19 +128,14 @@ export const CreateOrder = () => {
           </div>
         </motion.div>
 
-        <div className="flex-1 overflow-hidden bg-[#1e2023] p-8">
+        <div className="flex-1 overflow-hidden  p-8">
           <div className="grid grid-cols-12 gap-8 h-full">
-            <div className="col-span-8 flex flex-col">
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-br from-[#2a2c2e] to-[#252729] rounded-2xl border border-[#3f4245] shadow-2xl h-full flex flex-col overflow-hidden"
-              >
+            <div className="col-span-20 flex flex-col">
+              <motion.div className="border border-[#3f4245]  h-full flex flex-col overflow-hidden">
                 <div className="bg-gradient-to-r from-[#323437] to-[#2a2c2e] px-6 py-5 border-b border-[#3f4245]">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
-                      <div className="bg-gradient-to-r from-indigo-500 to-blue-600 p-3 rounded-xl shadow-lg">
+                      <div className="bg-gradient-to-r from-indigo-500 to-blue-600 p-3 rounded-xl">
                         <svg
                           className="w-6 h-6 text-white"
                           fill="none"
@@ -208,47 +152,13 @@ export const CreateOrder = () => {
                       </div>
                       <div>
                         <h2 className="text-xl font-bold text-[#dcdcdc] tracking-wide">
-                          Lead list with status: IN_PROGRESS
+                          Danh sách các lead sẵn sàng tạo đơn
                         </h2>
                         <p className="text-sm text-[#90999a] mt-1">
-                          Note: You can only create one order for one lead at a
-                          time — multiple leads are not allowed
+                          Note: Bạn chỉ có thể tạo 1 đơn hàng cho mỗi lead,
+                          không thể tạo cùng lúc
                         </p>
                       </div>
-                    </div>
-
-                    <div className="flex items-center space-x-3">
-                      <button className="px-4 py-2 bg-[#3f4245] rounded-lg text-[#90999a] hover:text-[#dcdcdc] hover:bg-[#525559] transition-all duration-200">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.414A1 1 0 013 6.707V4z"
-                          />
-                        </svg>
-                      </button>
-
-                      <button className="px-4 py-2 bg-[#3f4245] rounded-lg text-[#90999a] hover:text-[#dcdcdc] hover:bg-[#525559] transition-all duration-200">
-                        <svg
-                          className="w-5 h-5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                          />
-                        </svg>
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -286,10 +196,6 @@ export const CreateOrder = () => {
                       <h3 className="text-xl font-semibold text-[#dcdcdc] mb-2">
                         Không có leads nào
                       </h3>
-                      <p className="text-[#90999a] max-w-md">
-                        Hiện tại không có leads nào trong trạng thái "In
-                        Progress" để tạo đơn hàng
-                      </p>
                     </div>
                   ) : (
                     <div className="grid gap-4">
@@ -429,131 +335,6 @@ export const CreateOrder = () => {
                         );
                       })}
                     </div>
-                  )}
-                </div>
-              </motion.div>
-            </div>
-
-            <div className="col-span-4 space-y-6">
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="bg-gradient-to-br from-[#2a2c2e] to-[#252729] rounded-2xl border border-[#3f4245] shadow-2xl"
-              >
-                <div className="bg-gradient-to-r from-[#323437] to-[#2a2c2e] p-6 border-b border-[#3f4245] rounded-t-2xl">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-gradient-to-r from-cyan-500 to-teal-600 p-3 rounded-xl shadow-lg">
-                      <svg
-                        className="w-6 h-6 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-bold text-[#dcdcdc] tracking-wide">
-                        Action
-                      </h3>
-                      <p className="text-sm text-[#90999a] mt-1">
-                        Thao tác với leads được chọn
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-6 space-y-4">
-                  <button
-                    disabled={selectedCount === 0}
-                    className={`w-full p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                      selectedCount > 0
-                        ? "bg-gradient-to-r from-green-500/10 to-emerald-600/10 border-green-500/30 text-green-400 hover:bg-green-500/20"
-                        : "bg-[#323437] border-[#3f4245] text-[#90999a] cursor-not-allowed"
-                    }`}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <svg
-                        className="w-5 h-5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                        />
-                      </svg>
-                      <span className="font-bold">Create Orders</span>
-                    </div>
-                  </button>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="bg-gradient-to-br from-[#2a2c2e] to-[#252729] rounded-2xl border border-[#3f4245] shadow-2xl p-6"
-              >
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="bg-gradient-to-r from-violet-500 to-purple-600 p-2 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                      />
-                    </svg>
-                  </div>
-                  <h4 className="text-lg font-bold text-[#dcdcdc]">
-                    Tóm tắt lựa chọn
-                  </h4>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center p-3 bg-[#323437] rounded-lg border border-[#3f4245]">
-                    <span className="text-[#90999a] text-sm font-medium">
-                      Leads đã chọn:
-                    </span>
-                    <span className="text-[#dcdcdc] font-bold">
-                      {selectedCount}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between items-center p-3 bg-[#323437] rounded-lg border border-[#3f4245]">
-                    <span className="text-[#90999a] text-sm font-medium">
-                      Tổng leads:
-                    </span>
-                    <span className="text-[#dcdcdc] font-bold">
-                      {lead.length}
-                    </span>
-                  </div>
-
-                  {selectedCount > 0 && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      className="mt-4 p-4 bg-gradient-to-r from-green-500/10 to-emerald-600/10 rounded-xl border border-green-500/20"
-                    >
-                      <p className="text-green-400 text-sm font-medium text-center">
-                        ✓ Sẵn sàng tạo {selectedCount} đơn hàng
-                      </p>
-                    </motion.div>
                   )}
                 </div>
               </motion.div>
