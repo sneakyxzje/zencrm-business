@@ -133,7 +133,6 @@ export const LeadActionButtons = ({
   if (["WIN", "SHIPPING"].includes(status)) {
     return (
       <div className="p-4 bg-green-500/5 border border-green-500/10 rounded-xl flex items-center justify-center gap-2">
-        <span className="text-green-500 text-xl">🎉</span>
         <span className="text-green-400 font-medium">
           Đơn hàng đang được xử lý
         </span>
